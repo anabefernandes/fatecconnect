@@ -1,7 +1,7 @@
 
 # Contagem de Usuários FatecConect
 
-Alunos monitores: 2  
-Alunos: 1  
-Monitores: 1  
+Alunos monitores: 1  
+Alunos (usuário padrão): 1  
+Total: 2  
 Administradores: 1  
