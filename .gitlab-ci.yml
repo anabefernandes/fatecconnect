@@ -5,6 +5,7 @@ atualizar_contagem:
   image: node:18
   stage: atualizar_contagem
   script:
+    - git checkout main
     - npm install mongodb simple-git
     - node updateCount.js
   only:

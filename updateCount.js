@@ -44,7 +44,7 @@ Administradores: ${totalAdmins}
 
     await git.add("contagem.md");
     await git.commit("Atualiza contagem de usuários via pipeline");
-    await git.push("origin", "main");
+    await git.push("origin", "HEAD:main");
 
     console.log("Arquivo contagem.md atualizado e commitado com sucesso.");
   } catch (err) {
