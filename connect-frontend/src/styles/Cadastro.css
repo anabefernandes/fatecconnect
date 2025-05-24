@@ -1,0 +1,114 @@
+.cadastro-left {
+  background-color: var(--red-dark);
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+}
+
+.cadastro-left,
+.cadastro-right form {
+  font-family: 'Afacad', sans-serif;
+  color: var(--white);
+}
+
+.cadastro-left a {
+  color: var(--white) !important;
+}
+
+.cadastro-left a:hover {
+  color: var(--grey) !important;
+  text-decoration: underline;
+}
+
+.cadastro-left .form-label {
+  margin-bottom: 5px;
+}
+
+input.form-control {
+  background-color: transparent;
+  border: 2px solid var(--white);
+  color: var(--white) !important;
+  caret-color: var(--white);
+}
+
+input.form-control:focus {
+  background-color: transparent;
+  border-color: var(--white);
+  box-shadow: none;
+}
+
+input::placeholder {
+  color: var(--white);
+  opacity: 0.7;
+}
+
+h2.mb-3 {
+  font-size: 3rem;
+}
+
+.cadastro-right {
+  background-color: #f8f9fa;
+  position: relative;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cadastro-right img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  z-index: -1;
+}
+
+form input {
+  height: 45px;
+  border: 1px solid #ccc;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+
+form label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+form button {
+  height: 45px;
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: var(--red-button);
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: var(--red-light);
+}
+
+.pulse-button {
+  animation: pump 0.7s ease-in-out;
+}
+
+@keyframes pump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+  .container-fluid.d-flex {
+    flex-direction: column;
+  }
+ 
+}

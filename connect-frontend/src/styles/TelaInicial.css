@@ -1,0 +1,144 @@
+body {
+  font-family: 'Afacad', sans-serif;
+}
+
+.navbar a.btn {
+  background-color: var(--red-dark) transparent !important;
+  color: var(--white) !important;
+  border: 2px solid var(--white);
+  padding: 10px 20px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.navbar a.btn:hover {
+  background-color: var(--red-light);
+  color: var(--red-light) !important;
+  border-color: var(--red-light);
+}
+
+h4.text-danger {
+  border-bottom: 2px solid var(--red-dark);
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.cadastro-beneficios {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 50px;
+  padding: 30px 0;
+}
+
+.beneficio {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  padding: 0 30px;
+  transition: transform 0.3s ease; 
+}
+
+.beneficio:hover {
+  transform: scale(1.05); 
+}
+
+.beneficio:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  top: 10%;
+  height: 90%;
+  width: 2px;
+  background-color: var(--red-light);
+}
+
+.beneficio:first-child::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 10%;
+  height: 90%;
+  width: 2px;
+  background-color: var(--red-light);
+}
+
+.beneficio .icone {
+  background-color: var(--red-light);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.beneficio .texto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.beneficio h5 {
+  margin: 0;
+  font-weight: bold;
+  color: var(--red-light);
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+.beneficio p {
+  margin: 5px 0 0;
+  color: var(--red-light);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.bolinha-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.bolinha {
+  width: 10px;
+  height: 10px;
+  background-color: var(--grey);
+  border-radius: 50%;
+  margin: 0 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.bolinha.active {
+  background-color: var(--red-dark);
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .cadastro-beneficios {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .beneficio {
+    width: 100%;
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .beneficio:not(:last-child)::after {
+    display: none;
+  }
+
+  .beneficio:first-child::before {
+    display: none;
+  }
+
+}
+
+
+

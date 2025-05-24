@@ -1,0 +1,17 @@
+stages:
+  - atualizar_contagem
+
+atualizar_contagem:
+  image: node:18
+  stage: atualizar_contagem
+  script:
+    - git checkout main
+    - npm install mongodb simple-git
+    - node updateCount.js
+  only:
+    - main
+  variables:
+    MONGO_URI: "$MONGO_URI"
+    GIT_EMAIL: "$GIT_EMAIL"
+    GIT_USERNAME: "$GIT_USERNAME"
+    GITLAB_TOKEN: "$GITLAB_TOKEN"

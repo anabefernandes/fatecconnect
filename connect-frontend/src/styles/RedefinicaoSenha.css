@@ -1,0 +1,117 @@
+.login-left {
+  background-color: var(--red-dark) !important;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-family: 'Afacad', sans-serif;
+}
+
+.login-left a {
+  color: var(--white) !important;
+  text-decoration: none;
+  transition: color 0.3s, text-decoration 0.3s;
+}
+
+.login-left a:hover {
+  color: var(--grey) !important;
+  text-decoration: underline;
+}
+
+.login-left .form-label {
+  margin-bottom: 5px;
+}
+
+.login-right {
+  position: relative;
+  background-color: var(--red-dark);
+}
+
+.login-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+}
+
+input.form-control {
+  background-color: transparent;
+  border: 2px solid var(--white);
+  color: var(--white) !important;
+  caret-color: var(--white);
+  transition: border-color 0.3s;
+}
+
+input.form-control:focus {
+  background-color: transparent;
+  border-color: var(--white);
+  box-shadow: none;
+}
+
+.login-left input::placeholder {
+  color: var(--white) !important;
+  opacity: 0.85;
+}
+
+button.btn-danger {
+  width: auto;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: block;
+  border: 2px solid var(--white);
+  background-color: var(--red-button);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+button.btn-danger:hover {
+  background-color: var(--red-light);
+  border: 2px solid var(--white);
+  color: var(--white);
+}
+
+h2.mb-3 {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .container-fluid.d-flex {
+    flex-direction: column !important;
+  }
+
+  .login-left {
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  .login-right {
+    width: 100%;
+    height: 300px;
+    background-color: var(--red-light);
+  }
+
+  .login-right img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .logo-overlay {
+    padding-top: 20px;
+  }
+
+  h2.mb-3 {
+    font-size: 2rem;
+  }
+
+  button.btn-danger {
+    width: 100%;
+  }
+}
