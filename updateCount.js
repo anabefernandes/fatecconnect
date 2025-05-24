@@ -17,14 +17,14 @@ async function run() {
     const totalAlunos = await usuarios.countDocuments({ papel: "aluno" });
     const totalMonitores = await usuarios.countDocuments({ papel: "monitor" });
     const totalAdmins = await usuarios.countDocuments({ papel: "admin" });
-    const totalAlunosMonitores = totalAlunos + totalMonitores;
+    const total = totalAlunos + totalMonitores;
 
     const conteudo = `
 # Contagem de Usuários FatecConect
 
 Alunos monitores: ${totalAlunosMonitores}  
 Alunos: ${totalAlunos}  
-Monitores: ${totalMonitores}  
+Total: ${total}  
 Administradores: ${totalAdmins}  
 `;
 
@@ -49,7 +49,7 @@ Administradores: ${totalAdmins}
     console.log("Arquivo contagem.md atualizado e commitado com sucesso.");
   } catch (err) {
     console.error("Erro:", err);
-    process.exit(1); // Faz o pipeline falhar visivelmente
+    process.exit(1); 
   } finally {
     await client.close();
   }
