@@ -22,8 +22,8 @@ async function run() {
     const conteudo = `
 # Contagem de Usuários FatecConect
 
-Alunos monitores: ${totalAlunosMonitores}  
-Alunos: ${totalAlunos}  
+Alunos monitores: ${totalMonitores}  
+Alunos (usuário padrão): ${totalAlunos}  
 Total: ${total}  
 Administradores: ${totalAdmins}  
 `;
