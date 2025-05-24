@@ -3,7 +3,8 @@ const simpleGit = require("simple-git");
 const fs = require("fs/promises");
 
 const MONGO_URI = process.env.MONGO_URI;
-const DB_NAME = "fatecconnect"; 
+const GITLAB_TOKEN = process.env.GITLAB_TOKEN;
+const DB_NAME = "fatecconnect";
 const COLLECTION = "users";
 
 async function run() {
@@ -34,13 +35,21 @@ Administradores: ${totalAdmins}
     await git.addConfig("user.email", process.env.GIT_EMAIL);
     await git.addConfig("user.name", process.env.GIT_USERNAME);
 
+    // Atualiza a URL remota com autenticação via token
+    await git.remote([
+      "set-url",
+      "origin",
+      `https://gitlab-ci-token:${GITLAB_TOKEN}@gitlab.com/anabefernandes/fatecconnect.git`
+    ]);
+
     await git.add("contagem.md");
     await git.commit("Atualiza contagem de usuários via pipeline");
-    await git.push();
+    await git.push("origin", "main");
 
     console.log("Arquivo contagem.md atualizado e commitado com sucesso.");
   } catch (err) {
     console.error("Erro:", err);
+    process.exit(1); // Faz o pipeline falhar visivelmente
   } finally {
     await client.close();
   }

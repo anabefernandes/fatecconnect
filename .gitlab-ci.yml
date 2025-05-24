@@ -11,5 +11,6 @@ atualizar_contagem:
     - schedules
   variables:
     MONGO_URI: "$MONGO_URI"
-    GIT_EMAIL: "ci@example.com"
-    GIT_USERNAME: "CI Bot"
+    GIT_EMAIL: "$GIT_EMAIL"
+    GIT_USERNAME: "$GIT_USERNAME"
+    GITLAB_TOKEN: "$GITLAB_TOKEN"
