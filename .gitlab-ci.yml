@@ -1,0 +1,15 @@
+stages:
+  - atualizar_contagem
+
+atualizar_contagem:
+  image: node:18
+  stage: atualizar_contagem
+  script:
+    - npm install mongodb simple-git
+    - node updateCount.js
+  only:
+    - schedules
+  variables:
+    MONGO_URI: "$MONGO_URI"
+    GIT_EMAIL: "ci@example.com"
+    GIT_USERNAME: "CI Bot"
