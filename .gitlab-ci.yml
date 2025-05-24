@@ -6,6 +6,9 @@ atualizar_contagem:
   stage: atualizar_contagem
   script:
     - git checkout main
+    - git pull origin main
+    - cd connect-backend
+    - git checkout main
     - npm install mongodb simple-git
     - node updateCount.js
   only:
