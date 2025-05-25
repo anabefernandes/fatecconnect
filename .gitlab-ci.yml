@@ -12,7 +12,7 @@ atualizar_contagem:
     - npm install mongodb simple-git
     - node updateCount.js
   only:
-    - main 
+    - schedules
   variables:
     MONGO_URI: "$MONGO_URI"
     GIT_EMAIL: "$GIT_EMAIL"
