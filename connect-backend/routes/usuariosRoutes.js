@@ -202,7 +202,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const usuario = await User.findOne({ email }).select('+senha');
+    const usuario = await User.findOne({ email }).select('+senha').populate('curso', 'nome');
     if (!usuario) {
       return res.status(401).json({
         success: false,
@@ -241,7 +241,7 @@ router.post("/login", async (req, res) => {
         nome: usuario.nome,
         email: usuario.email,
         papel: usuario.papel,
-        curso: usuario.curso,
+        curso: usuario.curso.nome,
         ra: usuario.ra,
         fotoPerfil: usuario.fotoPerfil,
       },
@@ -307,7 +307,8 @@ router.post("/redefinir-senha", async (req, res) => {
 //apenas ADMIN: listar, atualizar e excluir users
 router.get("/usuarios", verificarToken, verificarAdmin, async (req, res) => {
   try {
-    const usuarios = await User.find({}, { senha: 0 });
+    const usuarios = await User.find({}, { senha: 0 }).populate("curso").lean();
+    console.log(usuarios);
     return res.status(200).json({
       success: true,
       usuarios
