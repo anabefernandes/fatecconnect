@@ -1,30 +1,31 @@
-const dotenv = require("dotenv");
+require("dotenv").config();
 const express = require("express");
-const db = require("./configs/db");
 const cors = require("cors");
 const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
 
-const monitorsRoutes = require("./routes/monitorsRoutes");
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
-
-const User = require("./models/User");
-const Curso = require("./models/Curso");
+const db = require("./configs/db");
 const bcrypt = require("bcryptjs");
 
-dotenv.config();
+// Models
+const User = require("./models/User");
+const Curso = require("./models/Curso");
 
+// Rotas
+const monitoresRoutes = require("./routes/monitoresRoutes");
+const usuarioRoutes = require("./routes/usuarioRoutes");
+
+// Inicialização do app
 const app = express();
 const server = http.createServer(app);
 
-// CORS aberto para qualquer origem
+// Configurações básicas
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Configuração do Socket.IO
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -39,7 +40,7 @@ const io = new Server(server, {
   pingTimeout: 5000,
 });
 
-// Mapa de conexões
+// Gerenciamento de conexões para o chat
 const monitoresOnline = new Map();
 const usuariosConectados = new Map();
 
@@ -47,28 +48,24 @@ io.on("connection", (socket) => {
   console.log("🔌 Nova conexão Socket.IO:", socket.id);
 
   socket.on("join_chat", (userData) => {
-    try {
-      if (!userData || !userData.nome || !userData.papel) {
-        return socket.emit("connection_error", "Dados de usuário inválidos");
-      }
-
-      console.log(`👤 ${userData.papel.toUpperCase()} conectado: ${userData.nome}`);
-      socket.userData = userData;
-      usuariosConectados.set(socket.id, userData);
-      socket.join("global_chat");
-
-      if (userData.papel === "monitor") {
-        monitoresOnline.set(socket.id, userData);
-        atualizarListaMonitores();
-      }
-
-      socket.emit("connection_success", {
-        message: "Conectado ao chat com sucesso",
-        user: userData,
-      });
-    } catch (error) {
-      console.error("Erro no join_chat:", error);
+    if (!userData || !userData.nome || !userData.papel) {
+      return socket.emit("connection_error", "Dados de usuário inválidos");
     }
+
+    console.log(`👤 ${userData.papel.toUpperCase()} conectado: ${userData.nome}`);
+    socket.userData = userData;
+    usuariosConectados.set(socket.id, userData);
+    socket.join("global_chat");
+
+    if (userData.papel === "monitor") {
+      monitoresOnline.set(socket.id, userData);
+      atualizarListaMonitores();
+    }
+
+    socket.emit("connection_success", {
+      message: "Conectado ao chat com sucesso",
+      user: userData,
+    });
   });
 
   socket.on("send_message", (data) => {
@@ -111,16 +108,15 @@ io.on("connection", (socket) => {
 });
 
 // Rotas da API
-app.use("/api/auth", authRoutes);
-app.use("/api/usuarios", userRoutes);
-app.use("/api/upload", uploadRoutes);
-app.use("/api/monitores", monitorsRoutes);
+app.use("/api", monitoresRoutes);
+app.use("/api", usuarioRoutes);
 
-// Inicialização do admin
+// Inicialização de admin padrão
 const inicializarAdmin = async () => {
   try {
     const adminExiste = await User.findOne({ email: "admin@fatec.sp.gov.br" });
     const cursoAdmin = await Curso.findOne({ nome: "Admin" });
+
     if (!adminExiste) {
       const salt = await bcrypt.genSalt(10);
       const admin = new User({
@@ -139,10 +135,11 @@ const inicializarAdmin = async () => {
   }
 };
 
-// Inicialização dos cursos padrão
+// Inicialização de cursos padrão
 const inicializarCursos = async () => {
   try {
     const cursosIniciais = ["DSM", "ADS", "COMEX", "GE", "PQ", "Admin"];
+
     for (const nomeCurso of cursosIniciais) {
       const cursoExiste = await Curso.findOne({ nome: nomeCurso });
       if (!cursoExiste) {
@@ -157,11 +154,11 @@ const inicializarCursos = async () => {
   }
 };
 
-// Inicializa servidor
+// Inicia o servidor
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, async () => {
-  await inicializarCursos();
   await inicializarAdmin();
-  console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`Acesse: http://localhost:${PORT}`);
+  await inicializarCursos();
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`🌐 Acesse: http://localhost:${PORT}`);
 });
