@@ -1,16 +1,19 @@
 const dotenv = require("dotenv");
 const express = require("express");
-const db = require("./config/db");
+const db = require("./configs/db");
 const cors = require("cors");
-const agendamentosRoutes = require("./routes/agendamentosRoutes");
-const monitoresRoutes = require("./routes/monitoresRoutes");
-const usuariosRoutes = require("./routes/usuariosRoutes");
+const path = require("path");
+const http = require("http");
+const { Server } = require("socket.io");
+
+const monitorsRoutes = require("./routes/monitorsRoutes");
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+
 const User = require("./models/User");
 const Curso = require("./models/Curso");
 const bcrypt = require("bcryptjs");
-const http = require("http");
-const path = require("path");
-const { Server } = require("socket.io");
 
 dotenv.config();
 
@@ -18,14 +21,13 @@ const app = express();
 const server = http.createServer(app);
 
 // CORS aberto para qualquer origem
-app.use(cors()); 
-
+app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // permite qualquer origem no Socket.IO também
+    origin: "*",
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -37,7 +39,7 @@ const io = new Server(server, {
   pingTimeout: 5000,
 });
 
-// usuarios e monitores conectados
+// Mapa de conexões
 const monitoresOnline = new Map();
 const usuariosConectados = new Map();
 
@@ -108,11 +110,13 @@ io.on("connection", (socket) => {
   }
 });
 
-app.use("/api", agendamentosRoutes);
-app.use("/api", monitoresRoutes);
-app.use("/api", usuariosRoutes);
+// Rotas da API
+app.use("/api/auth", authRoutes);
+app.use("/api/usuarios", userRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/monitores", monitorsRoutes);
 
-// se não existir um admin, cria
+// Inicialização do admin
 const inicializarAdmin = async () => {
   try {
     const adminExiste = await User.findOne({ email: "admin@fatec.sp.gov.br" });
@@ -135,11 +139,10 @@ const inicializarAdmin = async () => {
   }
 };
 
-// cria cursos padrão se não existir, inicialização
+// Inicialização dos cursos padrão
 const inicializarCursos = async () => {
   try {
     const cursosIniciais = ["DSM", "ADS", "COMEX", "GE", "PQ", "Admin"];
-
     for (const nomeCurso of cursosIniciais) {
       const cursoExiste = await Curso.findOne({ nome: nomeCurso });
       if (!cursoExiste) {
@@ -154,7 +157,7 @@ const inicializarCursos = async () => {
   }
 };
 
-// servidor
+// Inicializa servidor
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, async () => {
   await inicializarCursos();
