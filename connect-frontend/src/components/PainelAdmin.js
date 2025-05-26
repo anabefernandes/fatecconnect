@@ -20,7 +20,7 @@ const PainelAdmin = () => {
     } else {
       carregarUsuarios();
     }
-  }, []);
+  }, [navigate]);
 
   const carregarUsuarios = async () => {
     try {
@@ -30,14 +30,15 @@ const PainelAdmin = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const usuariosRecebidos = Array.isArray(response.data)
-        ? response.data
-        : response.data.usuarios || [];
+      const usuariosRecebidos = response.data.usuarios || [];
 
       setUsuarios(usuariosRecebidos);
     } catch (err) {
       console.error("Erro ao carregar usuários:", err);
-      alert("Erro ao carregar usuários: " + (err.response?.data?.mensagem || err.message));
+      alert(
+        "Erro ao carregar usuários: " +
+          (err.response?.data?.mensagem || err.message)
+      );
     }
   };
 
@@ -52,9 +53,13 @@ const PainelAdmin = () => {
   };
 
   const usuariosFiltrados = usuarios.filter((usuario) => {
-    const nomeOk = usuario.nome.toLowerCase().includes(filtros.nome.toLowerCase());
+    const nomeOk = usuario.nome
+      .toLowerCase()
+      .includes(filtros.nome.toLowerCase());
     const papelOk = filtros.papel ? usuario.papel === filtros.papel : true;
-    const cursoOk = filtros.curso ? usuario.curso?.toLowerCase().includes(filtros.curso.toLowerCase()) : true;
+    const cursoOk = filtros.curso
+      ? usuario.curso?.nome?.toLowerCase().includes(filtros.curso.toLowerCase())
+      : true;
     return nomeOk && papelOk && cursoOk;
   });
 
@@ -68,7 +73,10 @@ const PainelAdmin = () => {
       alert("Usuário excluído com sucesso!");
       carregarUsuarios();
     } catch (err) {
-      alert("Erro ao excluir usuário: " + err.response?.data?.mensagem || err.message);
+      alert(
+        "Erro ao excluir usuário: " + err.response?.data?.mensagem ||
+          err.message
+      );
     }
   };
 
@@ -77,7 +85,10 @@ const PainelAdmin = () => {
       <h1>Painel Administrativo</h1>
 
       <nav style={{ margin: "20px 0", display: "flex", gap: "15px" }}>
-        <Link to="/criar-monitor" style={{ textDecoration: "none", color: "#1976d2" }}>
+        <Link
+          to="/criar-monitor"
+          style={{ textDecoration: "none", color: "#1976d2" }}
+        >
           Criar Monitor
         </Link>
         <button
@@ -96,7 +107,14 @@ const PainelAdmin = () => {
       </nav>
 
       {/* Filtros */}
-      <div style={{ marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+      <div
+        style={{
+          marginBottom: "20px",
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+        }}
+      >
         <input
           type="text"
           name="nome"
@@ -104,7 +122,11 @@ const PainelAdmin = () => {
           value={filtros.nome}
           onChange={handleFiltroChange}
         />
-        <select name="papel" value={filtros.papel} onChange={handleFiltroChange}>
+        <select
+          name="papel"
+          value={filtros.papel}
+          onChange={handleFiltroChange}
+        >
           <option value="">Todos os papéis</option>
           <option value="aluno">Aluno</option>
           <option value="monitor">Monitor</option>
@@ -138,23 +160,56 @@ const PainelAdmin = () => {
                 }}
               >
                 <img
-                  src={usuario.fotoPerfil || "/default-profile.png"}
+                  src={
+                    usuario.fotoPerfil
+                      ? `http://localhost:5000${usuario.fotoPerfil}`
+                      : "../../public/images/usuario-padrao.png"
+                  }
                   alt="Foto de perfil"
-                  style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
                 />
                 <div style={{ flexGrow: 1 }}>
-                  <p><strong>Nome:</strong> {usuario.nome}</p>
-                  <p><strong>Email:</strong> {usuario.email}</p>
-                  <p><strong>Papel:</strong> {usuario.papel}</p>
-                  <p><strong>Curso:</strong> {usuario.curso?.nome || "Não informado"}</p>
+                  <p>
+                    <strong>Nome:</strong> {usuario.nome}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {usuario.email}
+                  </p>
+                  <p>
+                    <strong>Papel:</strong> {usuario.papel}
+                  </p>
+                  <p>
+                    <strong>Curso:</strong>{" "}
+                    {usuario.curso?.nome || "Não informado"}
+                  </p>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
                   <Link to={`/editar-usuario/${usuario._id}`}>
-                    <button style={{ padding: "6px 12px", cursor: "pointer" }}>Editar</button>
+                    <button style={{ padding: "6px 12px", cursor: "pointer" }}>
+                      Editar
+                    </button>
                   </Link>
                   <button
                     onClick={() => handleExcluirUsuario(usuario._id)}
-                    style={{ backgroundColor: "#f44336", color: "white", border: "none", padding: "6px 12px", borderRadius: "4px", cursor: "pointer" }}
+                    style={{
+                      backgroundColor: "#f44336",
+                      color: "white",
+                      border: "none",
+                      padding: "6px 12px",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
                   >
                     Excluir
                   </button>

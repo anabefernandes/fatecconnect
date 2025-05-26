@@ -52,7 +52,9 @@ io.on("connection", (socket) => {
       return socket.emit("connection_error", "Dados de usuário inválidos");
     }
 
-    console.log(`👤 ${userData.papel.toUpperCase()} conectado: ${userData.nome}`);
+    console.log(
+      `👤 ${userData.papel.toUpperCase()} conectado: ${userData.nome}`
+    );
     socket.userData = userData;
     usuariosConectados.set(socket.id, userData);
     socket.join("global_chat");

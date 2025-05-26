@@ -35,7 +35,6 @@ Administradores: ${totalAdmins}
     await git.addConfig("user.email", process.env.GIT_EMAIL);
     await git.addConfig("user.name", process.env.GIT_USERNAME);
 
-    // Atualiza a URL remota com autenticação via token
     await git.remote([
       "set-url",
       "origin",

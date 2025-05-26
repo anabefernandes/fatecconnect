@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Login from "./components/Login";
@@ -10,7 +15,7 @@ import ListarUsuarios from "./components/ListarUsuarios";
 import EditarUsuario from "./components/EditarUsuario";
 import PainelAluno from "./components/PainelAluno";
 import PainelMonitor from "./components/PainelMonitor";
-import RotaProtegida from "./components/RotaProtegida"; 
+import RotaProtegida from "./components/RotaProtegida";
 import TelaInicial from "./components/TelaInicial";
 import Chat from "./components/chat/Chat";
 import AgendarHorario from "./components/AgendarHorario";
@@ -19,12 +24,11 @@ import Forum from "./components/Forum";
 import RedefinirSenha from "./components/RedefinicaoSenhaUnificada";
 import SolicitarRedefinicao from "./components/RedefinicaoSenhaUnificada";
 
-
 const LayoutComChat = ({ children, socket }) => {
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const rotasSemChat = ['/', '/login', '/cadastro'];
+  const rotasSemChat = ["/", "/login", "/cadastro"];
 
   return (
     <>
@@ -54,9 +58,11 @@ const App = () => {
         <Route path="/" element={<TelaInicial />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/solicitar-redefinicao" element={<SolicitarRedefinicao />} />
+        <Route
+          path="/solicitar-redefinicao"
+          element={<SolicitarRedefinicao />}
+        />
         <Route path="/redefinir-senha/:token" element={<RedefinirSenha />} />
-        
 
         <Route
           path="/criar-monitor"
@@ -81,15 +87,15 @@ const App = () => {
         />
 
         <Route
-  path="/forum"
-  element={
-    <RotaProtegida papelNecessario="aluno">
-      <LayoutComChat socket={socket}>
-        <Forum />
-      </LayoutComChat>
-    </RotaProtegida>
-  }
-/>
+          path="/forum"
+          element={
+            <RotaProtegida papelNecessario="aluno">
+              <LayoutComChat socket={socket}>
+                <Forum />
+              </LayoutComChat>
+            </RotaProtegida>
+          }
+        />
 
         <Route
           path="/agendamentos"

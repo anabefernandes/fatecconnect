@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -6,7 +5,7 @@ const User = require("../models/User");
 const Curso = require("../models/Curso");
 const verificarToken = require("../middlewares/verificarToken");
 const verificarAdmin = require("../middlewares/verificarAdmin");
-const sendEmail = require('../mail');
+const sendEmail = require("../mail");
 
 let resetTokens = {};
 const router = express.Router();
@@ -15,7 +14,7 @@ const path = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); 
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     const uniqueName = Date.now() + "-" + file.originalname;
@@ -25,7 +24,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
 const handleError = (res, err, status = 500) => {
   console.error(err);
   return res.status(status).json({
@@ -34,37 +32,46 @@ const handleError = (res, err, status = 500) => {
   });
 };
 
-router.post("/upload-foto", verificarToken, upload.single("foto"), async (req, res) => {
-  try {
-    const filePath = `/uploads/${req.file.filename}`;
-    const userId = req.user.id;
-    
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { fotoPerfil: filePath },
-      { new: true }
-    );
+//upload de foto
+router.post(
+  "/upload-foto",
+  verificarToken,
+  upload.single("foto"),
+  async (req, res) => {
+    try {
+      const filePath = `/uploads/${req.file.filename}`;
+      const userId = req.user.id;
 
-    if (!updatedUser) {
-      return res.status(404).json({ success: false, mensagem: "Usuário não encontrado" });
-    }
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { fotoPerfil: filePath },
+        { new: true }
+      );
 
-    res.status(200).json({
-      success: true,
-      mensagem: "Imagem salva no banco com sucesso!",
-      path: filePath,
-      usuario: {
-        nome: updatedUser.nome,
-        email: updatedUser.email,
-        fotoPerfil: updatedUser.fotoPerfil
+      if (!updatedUser) {
+        return res
+          .status(404)
+          .json({ success: false, mensagem: "Usuário não encontrado" });
       }
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, mensagem: "Erro ao enviar imagem." });
-  }
-});
 
+      res.status(200).json({
+        success: true,
+        mensagem: "Imagem salva no banco com sucesso!",
+        path: filePath,
+        usuario: {
+          nome: updatedUser.nome,
+          email: updatedUser.email,
+          fotoPerfil: updatedUser.fotoPerfil,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ success: false, mensagem: "Erro ao enviar imagem." });
+    }
+  }
+);
 
 // cadastro de usuário comum (aluno)
 router.post("/cadastro", async (req, res) => {
@@ -129,68 +136,73 @@ router.post("/cadastro", async (req, res) => {
 });
 
 // criar monitor (apenas admin)
-router.post("/criar-monitor", verificarToken, verificarAdmin, async (req, res) => {
-  try {
-    const { nome, email, senha, ra, curso: cursoNome } = req.body;
+router.post(
+  "/criar-monitor",
+  verificarToken,
+  verificarAdmin,
+  async (req, res) => {
+    try {
+      const { nome, email, senha, ra, curso: cursoNome } = req.body;
 
-    if (!email.endsWith("@fatec.sp.gov.br")) {
-      return res.status(400).json({
-        success: false,
-        mensagem: "Apenas emails @fatec.sp.gov.br são permitidos",
+      if (!email.endsWith("@fatec.sp.gov.br")) {
+        return res.status(400).json({
+          success: false,
+          mensagem: "Apenas emails @fatec.sp.gov.br são permitidos",
+        });
+      }
+
+      if (await User.findOne({ email })) {
+        return res.status(400).json({
+          success: false,
+          mensagem: "Email já cadastrado",
+        });
+      }
+
+      if (await User.findOne({ ra })) {
+        return res.status(400).json({
+          success: false,
+          mensagem: "RA já cadastrado",
+        });
+      }
+
+      // Busca o curso pelo nome
+      const curso = await Curso.findOne({ nome: cursoNome });
+      if (!curso) {
+        return res.status(400).json({
+          success: false,
+          mensagem: "Curso não encontrado",
+        });
+      }
+
+      const novoMonitor = new User({
+        nome,
+        email,
+        senha: await bcrypt.hash(senha, 10),
+        papel: "monitor",
+        curso: curso._id,
+        ra,
       });
-    }
 
-    if (await User.findOne({ email })) {
-      return res.status(400).json({
-        success: false,
-        mensagem: "Email já cadastrado",
+      await novoMonitor.save();
+
+      return res.status(201).json({
+        success: true,
+        mensagem: "Monitor criado com sucesso",
+        usuario: {
+          nome: novoMonitor.nome,
+          email: novoMonitor.email,
+          papel: novoMonitor.papel,
+          curso: novoMonitor.curso,
+          ra: novoMonitor.ra,
+        },
       });
+    } catch (err) {
+      return handleError(res, err);
     }
-
-    if (await User.findOne({ ra })) {
-      return res.status(400).json({
-        success: false,
-        mensagem: "RA já cadastrado",
-      });
-    }
-
-    // Busca o curso pelo nome
-    const curso = await Curso.findOne({ nome: cursoNome });
-    if (!curso) {
-      return res.status(400).json({
-        success: false,
-        mensagem: "Curso não encontrado",
-      });
-    }
-
-    const novoMonitor = new User({
-      nome,
-      email,
-      senha: await bcrypt.hash(senha, 10),
-      papel: "monitor",
-      curso: curso._id,
-      ra,
-    });
-
-    await novoMonitor.save();
-
-    return res.status(201).json({
-      success: true,
-      mensagem: "Monitor criado com sucesso",
-      usuario: {
-        nome: novoMonitor.nome,
-        email: novoMonitor.email,
-        papel: novoMonitor.papel,
-        curso: novoMonitor.curso,
-        ra: novoMonitor.ra,
-      },
-    });
-  } catch (err) {
-    return handleError(res, err);
   }
-});
+);
 
-// rota de login 
+// rota de login
 router.post("/login", async (req, res) => {
   try {
     const { email, senha } = req.body;
@@ -202,7 +214,9 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const usuario = await User.findOne({ email }).select('+senha').populate('curso', 'nome');
+    const usuario = await User.findOne({ email })
+      .select("+senha")
+      .populate("curso", "nome");
     if (!usuario) {
       return res.status(401).json({
         success: false,
@@ -227,11 +241,11 @@ router.post("/login", async (req, res) => {
 
     const getDestino = (papel) => {
       const paineis = {
-        'admin': '/painel-admin',
-        'monitor': '/painel-monitor',
-        'aluno': '/painel-aluno'
+        admin: "/painel-admin",
+        monitor: "/painel-monitor",
+        aluno: "/painel-aluno",
       };
-      return paineis[papel] || '/';
+      return paineis[papel] || "/";
     };
 
     return res.json({
@@ -244,28 +258,30 @@ router.post("/login", async (req, res) => {
         curso: usuario.curso.nome,
         ra: usuario.ra,
         fotoPerfil: usuario.fotoPerfil,
+        biografia: usuario.biografia,
       },
       redirectTo: getDestino(usuario.papel),
     });
   } catch (err) {
     return handleError(res, err);
   }
-}); 
+});
 
 router.post("/solicitar-redefinicao", async (req, res) => {
   const { email } = req.body;
   const usuario = await User.findOne({ email });
-  if (!usuario) return res.status(404).json({ mensagem: "Usuário não encontrado." });
+  if (!usuario)
+    return res.status(404).json({ mensagem: "Usuário não encontrado." });
 
   // Geração do token
-  const token = Math.random().toString(36).substr(2, 8); 
+  const token = Math.random().toString(36).substr(2, 8);
 
   // Salvar token de redefinição no objeto
   resetTokens[token] = email;
 
   // Enviar o e-mail com o token
   const link = `${token}`;
-  const subject = 'Redefinição de senha';
+  const subject = "Redefinição de senha";
   const text = `Você solicitou a redefinição de senha. Clique no link para redefinir sua senha: ${link}`;
 
   try {
@@ -293,7 +309,7 @@ router.post("/redefinir-senha", async (req, res) => {
 
   const salt = await bcrypt.genSalt(10);
   const senhaHash = await bcrypt.hash(novaSenha, salt);
-  
+
   usuario.senha = senhaHash;
   await usuario.save();
 
@@ -303,7 +319,6 @@ router.post("/redefinir-senha", async (req, res) => {
   res.json({ mensagem: "Senha redefinida com sucesso!" });
 });
 
-
 //apenas ADMIN: listar, atualizar e excluir users
 router.get("/usuarios", verificarToken, verificarAdmin, async (req, res) => {
   try {
@@ -311,77 +326,91 @@ router.get("/usuarios", verificarToken, verificarAdmin, async (req, res) => {
     console.log(usuarios);
     return res.status(200).json({
       success: true,
-      usuarios
+      usuarios,
     });
   } catch (err) {
     return handleError(res, err);
   }
 });
 
-router.get("/usuarios/:id", verificarToken, verificarAdmin, async (req, res) => {
-  try {
-    const usuario = await User.findById(req.params.id);
-    if (!usuario) {
-      return res.status(404).json({
-        success: false,
-        mensagem: "Usuário não encontrado"
+router.get(
+  "/usuarios/:id",
+  verificarToken,
+  verificarAdmin,
+  async (req, res) => {
+    try {
+      const usuario = await User.findById(req.params.id);
+      if (!usuario) {
+        return res.status(404).json({
+          success: false,
+          mensagem: "Usuário não encontrado",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        usuario,
       });
+    } catch (err) {
+      return handleError(res, err);
     }
-    return res.status(200).json({
-      success: true,
-      usuario
-    });
-  } catch (err) {
-    return handleError(res, err);
   }
-});
+);
 
-router.put("/usuarios/:id", verificarToken, verificarAdmin, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { nome, email, papel } = req.body;
+router.put(
+  "/usuarios/:id",
+  verificarToken,
+  verificarAdmin,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { nome, email, papel } = req.body;
 
-    const usuario = await User.findByIdAndUpdate(
-      id,
-      { nome, email, papel },
-      { new: true }
-    );
+      const usuario = await User.findByIdAndUpdate(
+        id,
+        { nome, email, papel },
+        { new: true }
+      );
 
-    if (!usuario) {
-      return res.status(404).json({
-        success: false,
-        mensagem: "Usuário não encontrado"
+      if (!usuario) {
+        return res.status(404).json({
+          success: false,
+          mensagem: "Usuário não encontrado",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        mensagem: "Usuário atualizado",
+        usuario,
       });
+    } catch (err) {
+      return handleError(res, err);
     }
-
-    return res.status(200).json({
-      success: true,
-      mensagem: "Usuário atualizado",
-      usuario
-    });
-
-  } catch (err) {
-    return handleError(res, err);
   }
-});
+);
 
-router.delete("/usuarios/:id", verificarToken, verificarAdmin, async (req, res) => {
-  try {
-    const usuario = await User.findByIdAndDelete(req.params.id);
-    if (!usuario) {
-      return res.status(404).json({
-        success: false,
-        mensagem: "Usuário não encontrado"
+router.delete(
+  "/usuarios/:id",
+  verificarToken,
+  verificarAdmin,
+  async (req, res) => {
+    try {
+      const usuario = await User.findByIdAndDelete(req.params.id);
+      if (!usuario) {
+        return res.status(404).json({
+          success: false,
+          mensagem: "Usuário não encontrado",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        mensagem: "Usuário excluído com sucesso",
       });
+    } catch (err) {
+      return handleError(res, err);
     }
-    return res.status(200).json({
-      success: true,
-      mensagem: "Usuário excluído com sucesso"
-    });
-  } catch (err) {
-    return handleError(res, err);
   }
-});
+);
 
 //retorna os cursos para o cadastro
 router.get("/cursos", async (req, res) => {
@@ -390,6 +419,64 @@ router.get("/cursos", async (req, res) => {
     res.json(cursos);
   } catch (error) {
     res.status(500).json({ mensagem: "Erro ao buscar cursos" });
+  }
+});
+
+//retorna dados do perfil para o usuario
+router.get("/perfil", verificarToken, async (req, res) => {
+  try {
+    const usuario = await User.findById(req.user.id).select("-senha");
+    if (!usuario) {
+      return res
+        .status(404)
+        .json({ success: false, mensagem: "Usuário não encontrado." });
+    }
+    res.json({
+      success: true,
+      usuario,
+    });
+  } catch (error) {
+    console.error("Erro ao buscar perfil:", error);
+    res.status(500).json({ success: false, mensagem: "Erro interno." });
+  }
+});
+
+router.post("/biografia", verificarToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { biografia } = req.body;
+
+    if (typeof biografia !== "string") {
+      return res.status(400).json({
+        success: false,
+        mensagem: "Biografia precisa ser uma string",
+      });
+    }
+
+    const usuarioAtualizado = await User.findByIdAndUpdate(
+      userId,
+      { biografia },
+      { new: true, select: "-senha" }
+    );
+
+    if (!usuarioAtualizado) {
+      return res.status(404).json({
+        success: false,
+        mensagem: "Usuário não encontrado",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      mensagem: "Biografia atualizada com sucesso",
+      usuario: usuarioAtualizado,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      mensagem: "Erro ao atualizar biografia",
+    });
   }
 });
 
