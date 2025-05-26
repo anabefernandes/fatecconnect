@@ -5,7 +5,7 @@ function CadastroVaga() {
   const [form, setForm] = useState({
     titulo: "",
     descricao: "",
-    curso: ""
+    curso: "",
   });
 
   const [imagem, setImagem] = useState(null);
@@ -35,10 +35,13 @@ function CadastroVaga() {
     formData.append("curso", form.curso);
 
     try {
-      const response = await fetch("http://localhost:5000/api/cadastrovagas", {
-        method: "POST",
-        body: formData
-      });
+      const response = await fetch(
+        "https://fatecconnect-backend.onrender.com/api/cadastrovagas",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();

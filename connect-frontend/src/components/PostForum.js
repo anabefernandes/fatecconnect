@@ -17,7 +17,7 @@ export default function PostForum() {
     setLoading(true);
     try {
       await axios.post(
-        "http://localhost:5000/api/postar",
+        "https://fatecconnect-backend.onrender.com/api/postar",
         { titulo, conteudo },
         { headers: { Authorization: `Bearer ${token}` } }
       );

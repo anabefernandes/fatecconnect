@@ -23,7 +23,7 @@ const RedefinicaoSenhaUnificada = () => {
     setErroSolicitacao("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/solicitar-redefinicao", { email });
+      const response = await axios.post("https://fatecconnect-backend.onrender.com/api/solicitar-redefinicao", { email });
 
       if (response.data?.mensagem) {
         setMensagemSolicitacao(response.data.mensagem);
@@ -46,7 +46,7 @@ const RedefinicaoSenhaUnificada = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/redefinir-senha", {
+      const res = await axios.post("https://fatecconnect-backend.onrender.com/api/redefinir-senha", {
         token,
         novaSenha: senha,
       });

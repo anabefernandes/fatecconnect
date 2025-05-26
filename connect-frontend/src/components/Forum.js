@@ -21,14 +21,14 @@ const Forum = () => {
     const fetchDados = async () => {
       try {
         // Buscar cursos
-        const resCursos = await fetch("http://localhost:5000/api/cursos", {
+        const resCursos = await fetch("https://fatecconnect-backend.onrender.com/api/cursos", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const cursosData = await resCursos.json();
         setCursos(cursosData);
 
         // Buscar postagens
-        const resPosts = await fetch("http://localhost:5000/api/postagens", {
+        const resPosts = await fetch("https://fatecconnect-backend.onrender.com/api/postagens", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const postsData = await resPosts.json();
@@ -48,7 +48,7 @@ const Forum = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/postagens", {
+      const res = await fetch("https://fatecconnect-backend.onrender.com/api/postagens", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

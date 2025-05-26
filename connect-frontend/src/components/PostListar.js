@@ -11,7 +11,7 @@ const [token] = useState(() => localStorage.getItem("token") || "");
 
   const buscarPosts = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/posts", {
+      const response = await axios.get("https://fatecconnect-backend.onrender.com/api/posts", {
         params: filtroTitulo ? { titulo: filtroTitulo } : {},
       });
       setPosts(response.data);
@@ -26,7 +26,7 @@ const [token] = useState(() => localStorage.getItem("token") || "");
       if (!conteudo) return;
 
       await axios.post(
-        `http://localhost:5000/api/posts/${postId}/responder`,
+        `https://fatecconnect-backend.onrender.com/api/posts/${postId}/responder`,
         { conteudo },
         {
           headers: {

@@ -25,7 +25,7 @@ export default function ListarAgendamentosAluno() {
 
     const buscarAgendamentos = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/agendamentos/aluno", {
+        const response = await axios.get("https://fatecconnect-backend.onrender.com/api/agendamentos/aluno", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -46,7 +46,7 @@ export default function ListarAgendamentosAluno() {
   const cancelarAgendamento = async (id) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/api/agendamentos/${id}/status`,
+        `https://fatecconnect-backend.onrender.com/api/agendamentos/${id}/status`,
         { status: "cancelado" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

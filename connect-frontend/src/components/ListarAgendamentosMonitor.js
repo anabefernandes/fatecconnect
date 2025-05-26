@@ -27,7 +27,7 @@ export default function ListarAgendamentosMonitor() {
 
     const buscarAgendamentos = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/agendamentos/monitor", {
+        const response = await axios.get("https://fatecconnect-backend.onrender.com/api/agendamentos/monitor", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -48,7 +48,7 @@ export default function ListarAgendamentosMonitor() {
   const atualizarStatus = async (id, novoStatus) => {
     try {
       const response = await axios.patch(
-        `http://localhost:5000/api/agendamentos/${id}/status`,
+        `https://fatecconnect-backend.onrender.com/api/agendamentos/${id}/status`,
         { status: novoStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
