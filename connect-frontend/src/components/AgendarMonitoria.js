@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import api from "../services/api";
 
 export default function AgendarMonitoria() {
@@ -10,6 +9,7 @@ export default function AgendarMonitoria() {
   const [monitores, setMonitores] = useState([]);
   const [monitorId, setMonitorId] = useState("");
   const [data, setData] = useState("");
+  const [mensagemErro, setMensagemErro] = useState(""); // ✅ Corrigido aqui
 
   useEffect(() => {
     const buscarMonitores = async () => {
@@ -38,7 +38,7 @@ export default function AgendarMonitoria() {
   }
 
   const agendar = async () => {
-    console.log({ alunoId, monitorId, data }); // veja o que está vindo aqui
+    console.log({ alunoId, monitorId, data });
 
     if (!alunoId || !monitorId || !data) {
       alert("Preencha todos os campos antes de agendar.");
@@ -64,6 +64,10 @@ export default function AgendarMonitoria() {
   return (
     <div className="p-4 border rounded-xl max-w-md mx-auto bg-white shadow">
       <h2 className="text-xl font-bold mb-2">Agendar Monitoria</h2>
+
+      {mensagemErro && (
+        <div className="mb-2 text-red-600 font-semibold">{mensagemErro}</div>
+      )}
 
       <label className="block mb-2">
         Monitor:
