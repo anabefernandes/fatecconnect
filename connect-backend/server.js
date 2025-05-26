@@ -15,6 +15,9 @@ const Curso = require("./models/Curso");
 // Rotas
 const monitoresRoutes = require("./routes/monitoresRoutes");
 const usuarioRoutes = require("./routes/usuarioRoutes");
+const agendamentosRoutes = require("./routes/agendamentosRoutes");
+const forumRoutes = require("./routes/forumRoutes");
+const vagasRoutes = require("./routes/vagasRoutes");
 
 // Inicialização do app
 const app = express();
@@ -110,6 +113,9 @@ io.on("connection", (socket) => {
 // Rotas da API
 app.use("/api", monitoresRoutes);
 app.use("/api", usuarioRoutes);
+app.use("/api", vagasRoutes);
+app.use("/api", forumRoutes);
+app.use("/api", agendamentosRoutes);
 
 // Inicialização de admin padrão
 const inicializarAdmin = async () => {

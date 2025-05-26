@@ -133,7 +133,7 @@ const PainelMonitor = () => {
         <div className="d-flex gap-3 flex-wrap">
           <button
             className="btn btn-primary"
-            onClick={() => navigate("/agendamentos")}
+            onClick={() => navigate("/agendamentos/monitor")}
           >
             Ver Agendamentos
           </button>

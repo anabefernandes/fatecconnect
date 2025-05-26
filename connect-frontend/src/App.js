@@ -18,6 +18,14 @@ import Agendamentos from "./components/Agendamentos";
 import Forum from "./components/Forum";
 import RedefinirSenha from "./components/RedefinicaoSenhaUnificada";
 import SolicitarRedefinicao from "./components/RedefinicaoSenhaUnificada";
+import AgendarMonitoria from './components/AgendarMonitoria';
+import CadastroVaga from "./components/CadastroVaga";
+import ListarVagas from "./components/ListarVagas";
+import Postar from "./components/PostForum";
+import Posts from "./components/PostListar";
+import Responder from "./components/PostListar";
+import AgendamentosMonitor from "./components/ListarAgendamentosMonitor";
+import AgendamentosAluno from "./components/ListarAgendamentosAluno";
 
 
 const LayoutComChat = ({ children, socket }) => {
@@ -56,7 +64,14 @@ const App = () => {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/solicitar-redefinicao" element={<SolicitarRedefinicao />} />
         <Route path="/redefinir-senha/:token" element={<RedefinirSenha />} />
-
+        <Route path="/cadastrovagas" element={<CadastroVaga />} />
+        <Route path="/vagas" element={<ListarVagas />} />
+        <Route path="/postar" element={<Postar />} />
+        <Route path="/posts" element={<Posts />} />
+        <Route path="/responder" element={<Responder />} />
+        <Route path="/agendamentos/monitor" element={<AgendamentosMonitor />} />
+        <Route path="/agendamentos/aluno" element={<AgendamentosAluno />} />
+        
 
         <Route
           path="/criar-monitor"
@@ -68,7 +83,14 @@ const App = () => {
             </RotaProtegida>
           }
         />
-
+        <Route
+        path="/agendar-monitoria"
+        element={
+        <RotaProtegida papelNecessario="aluno">
+            <AgendarMonitoria alunoId={JSON.parse(localStorage.getItem('user'))?._id} />
+        </RotaProtegida>
+        }
+        />
         <Route
           path="/agendar"
           element={
@@ -81,15 +103,15 @@ const App = () => {
         />
 
         <Route
-          path="/forum"
-          element={
-            <RotaProtegida papelNecessario="aluno">
-              <LayoutComChat socket={socket}>
-                <Forum />
-              </LayoutComChat>
-            </RotaProtegida>
-          }
-        />
+            path="/forum"
+            element={
+              <RotaProtegida papelNecessario="aluno">
+                <LayoutComChat socket={socket}>
+              <Forum />
+                </LayoutComChat>
+              </RotaProtegida>
+              }
+              />
 
         <Route
           path="/agendamentos"

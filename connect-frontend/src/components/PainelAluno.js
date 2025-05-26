@@ -107,15 +107,21 @@ const PainelAluno = () => {
         </div>
 
         <p>Bem-vindo ao seu painel, onde você pode ver suas atividades e informações de cursos.</p>
-        <button className="btn btn-primary" onClick={() => navigate("/agendar")}>
+        <button className="btn btn-primary" onClick={() => navigate("/agendar-monitoria")}>
           Agendar Monitoria
         </button>
-        <button
-  className="btn btn-primary mt-3"
-  onClick={() => navigate("/forum")}
->
-  Acessar Fórum
-</button>
+        <button className="btn btn-primary" onClick={() => navigate("/cadastrovagas")}>
+          Cadastrar vagas
+        </button>
+        <button className="btn btn-primary mt-3" onClick={() => navigate("/postar")}>
+          Postar sua dúvida
+        </button>
+        <button className="btn btn-primary mt-3" onClick={() => navigate("/posts")}>
+          Acessar Fórum
+        </button>
+        <button className="btn btn-primary mt-3" onClick={() => navigate("/agendamentos/aluno")}>
+          Acessar Agendamentos
+        </button>
       </div>
 
       {/* MODAL DE UPLOAD DE FOTO */}
