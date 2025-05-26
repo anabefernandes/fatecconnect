@@ -13,14 +13,14 @@ function TelaInicial() {
     const [hoveredBenefit, setHoveredBenefit] = useState(null);
     const handleBenefitClick = (index) => {
         setActiveBenefit(index);
-    
+
         // Scroll até o botão de cadastro
         if (cadastroBtnRef.current) {
             cadastroBtnRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    
+
             // Adiciona classe para o "pump"
             cadastroBtnRef.current.classList.add('pulse-button');
-    
+
             // Remove a animação depois de um tempo para permitir novos cliques
             setTimeout(() => {
                 cadastroBtnRef.current.classList.remove('pulse-button');
@@ -43,10 +43,9 @@ function TelaInicial() {
                 style={{
                     background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 0, 0, 0.52))",
                     backdropFilter: "blur(1.5px)",
-                }}
-            >
-                <div className="container-fluid d-flex justify-content-between align-items-center flex-row">
-                    {/* logo */}
+                }}>
+              <div className="w-100 d-flex justify-content-between align-items-center px-4">
+                    {/* logo à esquerda */}
                     <a className="navbar-brand text-white fw-bold m-0" href="/">
                         <img
                             src="/images/logo-fatecconnect.png"
@@ -55,23 +54,24 @@ function TelaInicial() {
                         />
                     </a>
 
-                    {/* botão de login */}
+                    {/* botão de login à direita */}
                     <a
                         href="/login"
-                        className="btn btn-light text-danger fw-bold px-4 py-2 rounded-pill m-0"
+                        className="btn btn-light text-danger fw-bold px-4 py-2 rounded-pill"
                     >
                         Login
                     </a>
                 </div>
             </nav>
 
-            <section className="position-relative" style={{ height: '76vh', backgroundColor: '#b80000' }}>
+
+            <section className="position-relative" style={{ height: '600px', backgroundColor: '#b80000'}}>
                 {/* Imagem de fundo */}
                 <img
                     src="/images/banner-fatecconnect.png"
                     alt="Banner FatecConnect"
-                    className="w-100 h-100 object-fit-cover"
-                    style={{ objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+                    className="w-100 h-100 object-fit-cover img-banner-responsive"
+                    style={{ marginTop: '15px',objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1}}
                 />
 
                 {/* texto sobre a imagem */}
@@ -79,7 +79,7 @@ function TelaInicial() {
                     className="position-relative z-2 text-white d-flex flex-column justify-content-center align-items-center text-center h-100 px-3"
                     style={{ zIndex: 2 }}
                 >
-                    <h2 className="fw-light mb-4" style={{ maxWidth: '800px' }}>
+                    <h2 className="fw-light mb-4" style={{ maxWidth: '600px' }}>
                         “Onde Dúvidas se Transformam em <br />
                         Aprendizado e Conexões Criam <br />
                         Oportunidades!”
