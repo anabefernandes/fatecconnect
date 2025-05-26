@@ -12,6 +12,8 @@ const Navbar = () => {
   };
 
   return (
+    <>
+    {/* NavBar principal*/}
     <nav className="navbar-main d-flex align-items-center px-3 py-2 shadow-sm">
       <div className="logo-area">
         <img src="/images/logo.png" alt="Logo" className="logo-img" />
@@ -31,7 +33,8 @@ const Navbar = () => {
           <img src="/images/sair.png" alt="Sair" className="logout-img" />
         </button>
       </div>
-    </nav>
+    </nav>    
+    </>
   );
 };
 

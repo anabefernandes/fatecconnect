@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import SubNavbar from "./SubNavbar";
 
 const Forum = () => {
   const [postagens, setPostagens] = useState([]);
@@ -74,6 +75,7 @@ const Forum = () => {
   return (
     <>
       <Navbar />
+      <SubNavbar />
       <div className="container mt-4">
         <h2>Fórum de Discussões</h2>
 

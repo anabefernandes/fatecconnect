@@ -118,6 +118,19 @@ h4.text-danger {
   transform: scale(1.2);
 }
 
+@media (max-width: 576px) {
+  .navbar-brand img {
+    height: 35px !important;
+  }
+
+  .navbar a.btn {
+    font-size: 0.875rem;
+    padding: 6px 10px;
+  }
+
+
+}
+
 @media (max-width: 768px) {
   .cadastro-beneficios {
     flex-direction: column;
@@ -137,7 +150,6 @@ h4.text-danger {
   .beneficio:first-child::before {
     display: none;
   }
-
 }
 
 

@@ -10,7 +10,7 @@ import ListarUsuarios from "./components/ListarUsuarios";
 import EditarUsuario from "./components/EditarUsuario";
 import PainelAluno from "./components/PainelAluno";
 import PainelMonitor from "./components/PainelMonitor";
-import RotaProtegida from "./components/RotaProtegida"; 
+import RotaProtegida from "./components/RotaProtegida";
 import TelaInicial from "./components/TelaInicial";
 import Chat from "./components/chat/Chat";
 import AgendarHorario from "./components/AgendarHorario";
@@ -56,7 +56,7 @@ const App = () => {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/solicitar-redefinicao" element={<SolicitarRedefinicao />} />
         <Route path="/redefinir-senha/:token" element={<RedefinirSenha />} />
-        
+
 
         <Route
           path="/criar-monitor"
@@ -81,15 +81,15 @@ const App = () => {
         />
 
         <Route
-  path="/forum"
-  element={
-    <RotaProtegida papelNecessario="aluno">
-      <LayoutComChat socket={socket}>
-        <Forum />
-      </LayoutComChat>
-    </RotaProtegida>
-  }
-/>
+          path="/forum"
+          element={
+            <RotaProtegida papelNecessario="aluno">
+              <LayoutComChat socket={socket}>
+                <Forum />
+              </LayoutComChat>
+            </RotaProtegida>
+          }
+        />
 
         <Route
           path="/agendamentos"

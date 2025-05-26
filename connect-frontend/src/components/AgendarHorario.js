@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 const AgendarMonitoria = () => {
   const [monitores, setMonitores] = useState([]);
@@ -59,6 +61,8 @@ const AgendarMonitoria = () => {
 
   return (
     <div>
+       <Navbar />
+       <SubNavbar />
       <h2>Agendar Monitoria</h2>
 
       {mensagemErro && <p style={{ color: "red" }}>{mensagemErro}</p>}
