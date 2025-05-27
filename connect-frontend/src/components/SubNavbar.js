@@ -2,15 +2,24 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 
+const user = JSON.parse(localStorage.getItem("user"));
+
+const rotaPainel =
+  user?.papel === "admin"
+    ? "/painel-admin"
+    : user?.papel === "monitor"
+    ? "/painel-monitor"
+    : "/painel-aluno";
+
 const SubNavbar = () => {
   const navigate = useNavigate();
 
   const botoes = [
-    { src: "/images/home.png", alt: "Home", path: "/home" },
-    { src: "/images/vagas.png", alt: "Monitoria", path: "/monitorias" },
-    { src: "/images/painel-usuario.png", alt: "Perfil", path: "/perfil" },
+    { src: "/images/home.png", alt: "Home", path: "/posts" },
+    { src: "/images/vagas.png", alt: "Vagas", path: "/vagas" },
+    { src: "/images/painel-usuario.png", alt: "Perfil", path: rotaPainel },
     { src: "/images/chat-subNavBar.png", alt: "Fórum", path: "/forum" },
-    { src: "/images/agenda.png", alt: "Agenda", path: "/agenda" },
+    { src: "/images/agenda.png", alt: "Agenda", path: "/agendar-monitoria" },
   ];
 
   return (

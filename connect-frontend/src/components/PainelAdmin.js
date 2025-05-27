@@ -162,7 +162,7 @@ const PainelAdmin = () => {
                 <img
                   src={
                     usuario.fotoPerfil
-                      ? `http://localhost:5000${usuario.fotoPerfil}`
+                      ? `https://fatecconnect-backend.onrender.com${usuario.fotoPerfil}`
                       : "../../public/images/usuario-padrao.png"
                   }
                   alt="Foto de perfil"

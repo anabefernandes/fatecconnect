@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 function ListarVagas() {
   const [vagas, setVagas] = useState([]);
@@ -24,8 +26,14 @@ function ListarVagas() {
 
   return (
     <div>
+      <Navbar />
+      <SubNavbar />
       <h2>Vagas Disponíveis</h2>
-      <input placeholder="Filtrar por curso" value={cursoFiltro} onChange={handleFiltro} />
+      <input
+        placeholder="Filtrar por curso"
+        value={cursoFiltro}
+        onChange={handleFiltro}
+      />
       <ul>
         {vagas.map((vaga) => (
           <li key={vaga._id}>

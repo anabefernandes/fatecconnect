@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../services/api";
+import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 const Agendamentos = () => {
   const [agendamentos, setAgendamentos] = useState([]);
@@ -18,6 +20,8 @@ const Agendamentos = () => {
 
   return (
     <div>
+      <Navbar />
+      <SubNavbar />
       <h2>Meus Agendamentos</h2>
       {agendamentos.length === 0 ? (
         <p>Nenhum agendamento encontrado.</p>

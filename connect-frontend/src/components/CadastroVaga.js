@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 function CadastroVaga() {
   const [form, setForm] = useState({
@@ -56,35 +58,39 @@ function CadastroVaga() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Cadastrar Vaga</h2>
-      <input
-        type="file"
-        name="imagem"
-        accept="image/*"
-        onChange={handleImageChange}
-        required
-      />
-      <input
-        name="titulo"
-        placeholder="Título"
-        onChange={handleChange}
-        required
-      />
-      <textarea
-        name="descricao"
-        placeholder="Descrição"
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="curso"
-        placeholder="Curso"
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Cadastrar</button>
-    </form>
+    <div>
+      <Navbar />
+      <SubNavbar />
+      <form onSubmit={handleSubmit}>
+        <h2>Cadastrar Vaga</h2>
+        <input
+          type="file"
+          name="imagem"
+          accept="image/*"
+          onChange={handleImageChange}
+          required
+        />
+        <input
+          name="titulo"
+          placeholder="Título"
+          onChange={handleChange}
+          required
+        />
+        <textarea
+          name="descricao"
+          placeholder="Descrição"
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="curso"
+          placeholder="Curso"
+          onChange={handleChange}
+          required
+        />
+        <button type="submit">Cadastrar</button>
+      </form>
+    </div>
   );
 }
 

@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
+import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 export default function AgendarMonitoria() {
-  // Pega o usuário do localStorage
   const user = JSON.parse(localStorage.getItem("user"));
   const alunoId = user?._id || user?.id;
 
   const [monitores, setMonitores] = useState([]);
   const [monitorId, setMonitorId] = useState("");
   const [data, setData] = useState("");
-  const [mensagemErro, setMensagemErro] = useState(""); // ✅ Corrigido aqui
+  const [mensagemErro, setMensagemErro] = useState("");
 
   useEffect(() => {
     const buscarMonitores = async () => {
@@ -25,7 +26,6 @@ export default function AgendarMonitoria() {
     buscarMonitores();
   }, []);
 
-  // Validação dos dados do usuário
   if (!user || !user.nome || !user.email || !user.ra || !user.curso) {
     return (
       <div className="p-4 max-w-md mx-auto bg-red-100 border border-red-400 rounded">
@@ -62,7 +62,9 @@ export default function AgendarMonitoria() {
   };
 
   return (
-    <div className="p-4 border rounded-xl max-w-md mx-auto bg-white shadow">
+    <div>
+      <Navbar />
+      <SubNavbar />
       <h2 className="text-xl font-bold mb-2">Agendar Monitoria</h2>
 
       {mensagemErro && (
