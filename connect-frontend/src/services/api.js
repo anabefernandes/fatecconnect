@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://fatecconnect-backend.onrender.com",
+  baseURL: "https://fatecconnect-backend.onrender.com/api",
 });
-//https://fatecconnect-backend.onrender.com
+//https://fatecconnect-backend.onrender.com/api
 //http://localhost:5000/api
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
