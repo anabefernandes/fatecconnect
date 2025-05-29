@@ -1,0 +1,104 @@
+/* Container geral do carrossel */
+.mySwiper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 0;
+  position: relative;
+}
+
+/* Slide individual */
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+/* Card de monitor: horizontal, espaçoso */
+.card-monitor {
+  width: 300px;
+  height: 180px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: #D9D9D9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+/* Imagem do monitor */
+.card-monitor img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+/* Informações do monitor */
+.monitor-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Ícones de ação */
+.card-monitor .icon-actions {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.card-monitor .icon-actions img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  border-radius: 0;
+  object-fit: contain; 
+}
+
+.swiper-navigation-custom {
+  position: absolute;
+  top: 40%;
+  left: 15%;
+  right: 15%;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 10px;
+  pointer-events: none;
+}
+
+.swiper-navigation-custom button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.swiper-navigation-custom img {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+.swiper-navigation-custom img:hover {
+  transform: scale(1.1);
+}
+
+input.form-control,
+textarea.form-control {
+  background-color: #fff !important;
+  border-color: #e1e1e1 !important;
+  color: #212529 !important;
+}
+
+hr{
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  height: 2px;
+}

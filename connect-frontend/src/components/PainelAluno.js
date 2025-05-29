@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../styles/PainelAluno.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "./Navbar";
 import SubNavbar from "./SubNavbar";
 import api from "../services/api";
+import "../styles/variables/Colors.css";
+import ListarAgendamentosAluno from "../components/ListarAgendamentosAluno";
 
 const PainelAluno = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ const PainelAluno = () => {
   const [conteudoPost, setConteudoPost] = useState("");
   const [loadingPost, setLoadingPost] = useState(false);
   const [mensagemPost, setMensagemPost] = useState(null);
+
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -27,6 +30,19 @@ const PainelAluno = () => {
   const [novaBiografia, setNovaBiografia] = useState("");
 
   const [meusPosts, setMeusPosts] = useState([]);
+
+  const editarPost = (postId) => {
+    // Exemplo: redirecionar ou abrir modal
+    console.log("Editar post:", postId);
+  };
+
+  const excluirPost = (postId) => {
+    // Exemplo: confirmação + remoção
+    if (window.confirm("Tem certeza que deseja excluir este post?")) {
+      console.log("Excluir post:", postId);
+      // Chamada à API para deletar
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -109,6 +125,11 @@ const PainelAluno = () => {
       return;
     }
 
+    if (novaBiografia.length > 500) {
+      alert("A biografia não pode ter mais que 500 caracteres.");
+      return;
+    }
+
     try {
       const { data } = await api.post(
         "/biografia",
@@ -174,172 +195,270 @@ const PainelAluno = () => {
       <Navbar />
       <SubNavbar />
 
-      <div className="painel-content p-4">
-        <h1>Painel do Aluno</h1>
-
-        <div className="row mt-4">
-          {/* Coluna da esquerda: Perfil e ações */}
+      <div className="container painel-content p-4">
+        <h4 className="mb-5">Painel do Aluno</h4>
+        <div className="row ">
+          {/* Coluna esquerda - Perfil e ações */}
           <div className="col-md-5">
-            {/* Foto e Saudação */}
-            <div className="d-flex align-items-center gap-3 mb-4">
-              <img
-                src={fotoUrl || "/images/usuario_padrao.png"}
-                alt="Foto de Perfil"
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-              <div>
-                <h4>Olá, {usuario?.nome || "Aluno"}!</h4>
-                <button
-                  className="btn btn-sm btn-secondary mt-1"
+            <div className="d-flex align-items gap-3 mb-3">
+              <Link to="/forum" className="btn btn-sm p-0 m-0 ">
+                <img
+                  src="/images/voltar-red.png"
+                  alt="Voltar para o início"
+                  style={{ width: "22px", height: "22px" }}
+                />
+              </Link>
+
+              <div className="position-relative d-inline-block">
+                <img
+                  src={fotoUrl || "/images/usuario_padrao.png"}
+                  alt="Foto de Perfil"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+                <img
+                  src="/images/edite-sua-foto.png"
+                  alt="Editar Foto"
                   onClick={() => setShowModal(true)}
-                >
-                  Editar Foto
-                </button>
+                  style={{
+                    position: "absolute",
+                    bottom: "0",
+                    right: "0",
+                    width: "28px",
+                    height: "28px",
+                    cursor: "pointer",
+                    backgroundColor: "#fff",
+                    borderRadius: "50%",
+                    padding: "4px",
+                  }}
+                />
               </div>
+              <h5 className="mb-0 fw-bold mt-3">{usuario?.nome || "Aluno"}</h5>
             </div>
 
-            <div className="mb-4">
-              <h5>Biografia</h5>
-              <p>{biografia || "Nenhuma biografia cadastrada."}</p>
-              <button
-                className="btn btn-sm btn-secondary"
-                onClick={() => {
-                  setNovaBiografia(biografia);
-                  setShowBioModal(true);
-                }}
-              >
-                Editar Biografia
-              </button>
+            <div className="mt-4 mb-4 p-3 rounded" style={{
+              backgroundColor: "#f0f0f0",
+              maxHeight: "350px",
+              height: "300px",
+              position: "relative",
+            }}>
+              <div className="mb-3" style={{ position: "relative" }}>
+                <h5 className="text-center mb-0">Biografia</h5>
+                <img
+                  src="/images/editar.png"
+                  alt="Editar"
+                  onClick={() => {
+                    setNovaBiografia(biografia);
+                    setShowBioModal(true);
+                  }}
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: "0px",
+                    right: "0px",
+                  }}
+                  title="Editar biografia"
+                />
+              </div>
+              <p style={{ whiteSpace: 'pre-wrap', fontSize: "1.05rem" }}>
+                {biografia || "Nenhuma biografia cadastrada."}</p>
             </div>
+            
+             <ListarAgendamentosAluno limite={3} comNavs={false}/>
 
             <div className="d-grid gap-2">
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/cadastrovagas")}
-              >
+              <button className="btn btn-primary" onClick={() => navigate("/cadastrovagas")}>
                 Cadastrar vagas
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/vagas")}
-              >
+              <button className="btn btn-primary" onClick={() => navigate("/vagas")}>
                 Lista vagas
               </button>
-              <button
-                className="btn btn-primary mt-3"
-                onClick={() => navigate("/postar")}
-              >
+              <button className="btn btn-primary mt-3" onClick={() => navigate("/postar")}>
                 Postar sua dúvida
               </button>
-              <button
-                className="btn btn-primary mt-3"
-                onClick={() => navigate("/agendamentos/aluno")}
-              >
+              <button className="btn btn-primary mt-3" onClick={() => navigate("/agendamentos/aluno")}>
                 Acessar Agendamentos
               </button>
             </div>
           </div>
 
-          {/* Coluna da direita: Posts */}
+          {/* Coluna direita - Posts */}
           <div className="col-md-7">
-            <h5>Criar novo post</h5>
+            <h5 className="text-center">Criar novo post</h5>
             <div className="mb-4 border p-3 rounded">
               <input
+                type="text"
                 placeholder="Título"
-                className="mb-2 p-2 border rounded w-full"
+                className="mb-2 p-2 border rounded w-100"
                 value={tituloPost}
                 onChange={(e) => setTituloPost(e.target.value)}
                 disabled={loadingPost}
               />
-              <br></br>
               <textarea
-                placeholder="Conteúdo"
-                className="mb-2 p-2 border rounded w-full"
+                placeholder="O que você gostaria de compartilhar?"
+                className="mb-2 p-2 border rounded w-100"
                 rows={3}
                 value={conteudoPost}
                 onChange={(e) => setConteudoPost(e.target.value)}
                 disabled={loadingPost}
-              ></textarea><br></br>
-              <button
-                className="btn btn-primary"
-                onClick={handlePostar}
-                disabled={loadingPost}
-              >
-                {loadingPost ? "Postando..." : "Postar"}
-              </button>
-              {mensagemPost && (
-                <p className="mt-2 text-success">{mensagemPost}</p>
-              )}
+                style={{ resize: "none", overflowY: "auto" }}
+              ></textarea>
+              <div className="d-flex justify-content-end align-items-center">
+                {mensagemPost && (
+                  <p className="mt-0 text-success">{mensagemPost}</p>
+                )}
+
+                <img
+                  src="/images/enviado.png"
+                  alt="Postar"
+                  onClick={handlePostar}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    cursor: loadingPost ? "not-allowed" : "pointer",
+                    opacity: loadingPost ? 0.5 : 1,
+                  }}
+                />
+              </div>
             </div>
-            <h5>Seus Posts Recentes</h5>
-            {meusPosts.length === 0 ? (
-              <p>Você ainda não postou nenhuma dúvida.</p>
-            ) : (
-              <ul className="list-group">
-                {meusPosts.map((post) => (
-                  <li key={post._id} className="list-group-item mb-3">
-                    <strong>{post.titulo}</strong>
-                    <p className="mb-1" style={{ whiteSpace: "pre-wrap" }}>
-                      {post.conteudo}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            )}
+
+            {meusPosts.map((post) => (
+              <div
+                key={post._id}
+                className="card mb-3 shadow-sm position-relative"
+                style={{ borderLeft: "4px solid var(--red-dead)" }}
+              >
+                <div className="position-absolute"
+                  style={{
+                    top: "10px", right: "10px", zIndex: 1
+                  }}
+                >
+                  <button
+                    className="btn btn-sm me-2"
+                    style={{
+                      backgroundColor: "var(--red-light)",
+                      color: "#fff",
+                    }}
+                    onClick={() => editarPost(post._id)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-sm"
+                    style={{
+                      backgroundColor: "var(--red-dark)",
+                      color: "#fff",
+                    }}
+                    onClick={() => excluirPost(post._id)}
+                  >
+                    Excluir
+                  </button>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex align-items-center mb-2">
+                    <img
+                      src={fotoUrl || "/images/usuario_padrao.png"}
+                      alt="Foto do autor"
+                      style={{
+                        width: "36px",
+                        height: "36px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <strong className="text-dark">
+                      {post.autor?.nome || "Aluno"}
+                    </strong>
+                  </div>
+
+                  <h6 className="card-title fw-bold">{post.titulo}</h6>
+                  <p className="card-text" style={{ whiteSpace: "pre-wrap" }}>
+                    {post.conteudo.length > 150
+                      ? post.conteudo.substring(0, 150) + "..."
+                      : post.conteudo}
+                  </p>
+
+                  <div className="d-flex justify-content-between align-items-center">
+                    <small className="text-muted">
+                      {post.createdAt &&
+                        new Date(post.createdAt).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
+                      {post.updatedAt && post.updatedAt !== post.createdAt && (
+                        <span className="ms-2">(editado)</span>
+                      )}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </div >
 
       {/* MODAL DE UPLOAD DE FOTO */}
-      {showModal && (
-        <div
-          className="modal fade show d-block"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Enviar Foto de Perfil</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="img-fluid mt-3 rounded"
+      {
+        showModal && (
+          <div
+            className="modal fade show d-block"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Enviar Foto de Perfil</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowModal(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
                   />
-                )}
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button className="btn btn-primary" onClick={handleUpload}>
-                  Enviar
-                </button>
+                  {preview && (
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="img-fluid mt-3 rounded"
+                    />
+                  )}
+                </div>
+                <div className="modal-footer">
+                  <button
+                    className="btn btn-secondary"
+                    style={{
+                      backgroundColor: "var(--red-light)",
+                      color: "#fff"
+                    }}
+                    onClick={() => setShowModal(false)}
+                  > Cancelar
+                  </button>
+                  <button className="btn"
+                    style={{
+                      backgroundColor: "var(--red-dark)",
+                      color: "#fff"
+                    }} onClick={handleUpload}>
+                    Enviar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* MODAL DE BIOGRAFIA */}
       {showBioModal && (
@@ -357,26 +476,33 @@ const PainelAluno = () => {
                   onClick={() => setShowBioModal(false)}
                 ></button>
               </div>
+
               <div className="modal-body">
                 <textarea
                   className="form-control"
-                  rows="4"
+                  style={{
+                    height: '100px',
+                    resize: 'none'
+                  }}
                   value={novaBiografia}
                   onChange={(e) => setNovaBiografia(e.target.value)}
+                  maxLength={500}
                 />
+                <small className="text-muted">{novaBiografia.length}/ 500 caracteres</small>
               </div>
+
               <div className="modal-footer">
                 <button
-                  className="btn btn-secondary"
+                  className="btn"
+                  style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
                   onClick={() => setShowBioModal(false)}
-                >
-                  Cancelar
+                > Cancelar
                 </button>
                 <button
-                  className="btn btn-primary"
+                  className="btn"
+                  style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
                   onClick={handleSalvarBiografia}
-                >
-                  Salvar
+                > Salvar
                 </button>
               </div>
             </div>

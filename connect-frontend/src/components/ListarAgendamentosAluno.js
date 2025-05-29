@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import NavBar from "./Navbar";
+import SubNavBar from "./SubNavbar";
+import MiniAgendamentos from "./MiniAgendamentos";
 
-export default function ListarAgendamentosAluno() {
+export default function ListarAgendamentosAluno({ limite, comNavs = true }) {
   const [agendamentos, setAgendamentos] = useState([]);
   const [erro, setErro] = useState(null);
   const [mensagem, setMensagem] = useState(null);
@@ -15,22 +19,33 @@ export default function ListarAgendamentosAluno() {
       return;
     }
 
-    const decoded = jwtDecode(token);
-    const papel = decoded.papel;
+    let decoded;
+    try {
+      decoded = jwtDecode(token);
+    } catch {
+      setErro("Token inválido.");
+      return;
+    }
 
-    if (papel !== "aluno") {
+    if (decoded.papel !== "aluno") {
       setErro("Acesso restrito aos alunos.");
       return;
     }
 
     const buscarAgendamentos = async () => {
       try {
-        const response = await axios.get("https://fatecconnect-backend.onrender.com/api/agendamentos/aluno", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "https://fatecconnect-backend.onrender.com/api/agendamentos/aluno",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (response.data.success) {
-          setAgendamentos(response.data.agenda);
+          const ordenados = response.data.agenda.sort(
+            (a, b) => new Date(b.data) - new Date(a.data)
+          );
+          setAgendamentos(ordenados);
         } else {
           setErro("Não foi possível carregar os agendamentos.");
         }
@@ -53,9 +68,12 @@ export default function ListarAgendamentosAluno() {
 
       if (response.data.success) {
         setAgendamentos((prev) =>
-          prev.map((ag) => (ag._id === id ? { ...ag, status: "cancelado" } : ag))
+          prev.map((ag) =>
+            ag._id === id ? { ...ag, status: "cancelado" } : ag
+          )
         );
         setMensagem("Agendamento cancelado com sucesso!");
+        setErro(null);
       }
     } catch (err) {
       console.error("Erro ao cancelar agendamento:", err);
@@ -63,35 +81,42 @@ export default function ListarAgendamentosAluno() {
     }
   };
 
+  const agendamentosExibidos = limite
+    ? agendamentos.slice(0, limite)
+    : agendamentos;
+
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Meus Agendamentos</h2>
+    <>
+      {comNavs && (
+        <>
+          <NavBar />
+          <SubNavBar />
+        </>
+      )}
 
-      {erro && <p className="text-red-600">{erro}</p>}
-      {mensagem && <p className="text-green-600">{mensagem}</p>}
+      <div className="container mt-4">
+        <h2 className="mb-4">
+          {limite
+            ? `Agendamentos mais recentes`
+            : "Meus agendamentos"}
+        </h2>
 
-      {agendamentos.length === 0 && !erro && <p>Nenhum agendamento encontrado.</p>}
+        {erro && <div className="alert alert-danger">{erro}</div>}
+        {mensagem && <div className="alert alert-success">{mensagem}</div>}
 
-      <div className="space-y-4">
-        {agendamentos.map((agendamento) => (
-          <div key={agendamento._id} className="p-4 border rounded shadow">
-            <p><strong>Monitor:</strong> {agendamento.monitor?.nome || "Desconhecido"}</p>
-            <p><strong>Data:</strong> {new Date(agendamento.data).toLocaleString("pt-BR")}</p>
-            <p><strong>Status:</strong> {agendamento.status}</p>
+        <MiniAgendamentos
+          agendamentos={agendamentosExibidos}
+          cancelarAgendamento={cancelarAgendamento}
+        />
 
-            <div className="mt-2 space-x-2">
-              {agendamento.status !== "cancelado" && agendamento.status !== "concluído" &&(
-                <button
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                  onClick={() => cancelarAgendamento(agendamento._id)}
-                >
-                  Cancelar
-                </button>
-              )}
-            </div>
+        {limite && agendamentos.length > limite && (
+          <div className="text-center mt-3">
+            <Link to="/agendamentos/aluno" className="btn btn-outline-primary">
+              Ver todos
+            </Link>
           </div>
-        ))}
+        )}
       </div>
-    </div>
+    </>
   );
 }
