@@ -27,14 +27,14 @@
 }
 
 input.form-control {
-  background-color: transparent;
+  background-color: transparent !important;
   border: 2px solid var(--white);
   color: var(--white) !important;
   caret-color: var(--white);
 }
 
 input.form-control:focus {
-  background-color: transparent;
+  background-color: transparent !important;
   border-color: var(--white);
   box-shadow: none;
 }

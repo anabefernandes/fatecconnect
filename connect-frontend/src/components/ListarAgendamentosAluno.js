@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import NavBar from "./Navbar";
@@ -97,7 +97,7 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true }) {
       <div className="container mt-4">
         <h2 className="mb-4">
           {limite
-            ? `Agendamentos mais recentes`
+            ? `Agendamentos Recentes`
             : "Meus agendamentos"}
         </h2>
 
@@ -111,7 +111,21 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true }) {
 
         {limite && agendamentos.length > limite && (
           <div className="text-center mt-3">
-            <Link to="/agendamentos/aluno" className="btn btn-outline-primary">
+            <Link to="/agendamentos/aluno"
+              className="btn"
+              style={{
+                border: "2px solid var(--red-dark)",
+                color: "var(--red-dead)",
+                backgroundColor: "transparent",
+              }} onMouseEnter={(e) => {
+                e.target.style.backgroundColor = "var(--red-light)";
+                e.target.style.color = "#fff";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.color = "var(--red-dark)";
+              }}
+            >
               Ver todos
             </Link>
           </div>

@@ -9,7 +9,7 @@ export default function MiniAgendamentos({ agendamentos, cancelarAgendamento }) 
       <thead className="table-light">
         <tr>
           <th>Monitor</th>
-          <th>Data</th>
+          <th>Data - Hora</th>
           <th>Status</th>
           <th style={{ width: "120px" }} className="text-center">Ações</th>
         </tr>
@@ -22,12 +22,21 @@ export default function MiniAgendamentos({ agendamentos, cancelarAgendamento }) 
             <td className="text-capitalize">{agendamento.status}</td>
             <td className="text-center">
               {agendamento.status !== "cancelado" && agendamento.status !== "concluído" ? (
-                <button
-                  className="btn btn-sm btn-danger"
+                <img
+                  src="/images/cancelar.png"
+                  alt="Cancelar"
+                  title="Cancelar agendamento"
                   onClick={() => cancelarAgendamento(agendamento._id)}
-                >
-                  Cancelar
-                </button>
+                  style={{
+                    width: "28px",
+                    height: "28px",
+                    cursor: "pointer",
+                    display: "inline-block",
+                    transition: "filter 0.2s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(0.85)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.filter = "brightness(1)")}
+                />
               ) : (
                 <span className="text-muted">—</span>
               )}

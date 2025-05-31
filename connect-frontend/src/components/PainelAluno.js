@@ -119,6 +119,7 @@ const PainelAluno = () => {
     }
   };
 
+
   const handleSalvarBiografia = async () => {
     if (!novaBiografia.trim()) {
       alert("A biografia não pode estar vazia.");
@@ -200,135 +201,138 @@ const PainelAluno = () => {
         <div className="row ">
           {/* Coluna esquerda - Perfil e ações */}
           <div className="col-md-5">
-            <div className="d-flex align-items gap-3 mb-3">
-              <Link to="/forum" className="btn btn-sm p-0 m-0 ">
-                <img
-                  src="/images/voltar-red.png"
-                  alt="Voltar para o início"
-                  style={{ width: "22px", height: "22px" }}
-                />
-              </Link>
+            <div style={{ position: "sticky", top: "20px" }}>
+              <div className="d-flex align-items gap-3 mb-3">
+                <Link to="/forum" className="btn btn-sm p-0 m-0 ">
+                  <img
+                    src="/images/voltar-red.png"
+                    alt="Voltar para o início"
+                    style={{ width: "22px", height: "22px" }}
+                  />
+                </Link>
 
-              <div className="position-relative d-inline-block">
-                <img
-                  src={fotoUrl || "/images/usuario_padrao.png"}
-                  alt="Foto de Perfil"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-                <img
-                  src="/images/edite-sua-foto.png"
-                  alt="Editar Foto"
-                  onClick={() => setShowModal(true)}
-                  style={{
-                    position: "absolute",
-                    bottom: "0",
-                    right: "0",
-                    width: "28px",
-                    height: "28px",
-                    cursor: "pointer",
-                    backgroundColor: "#fff",
-                    borderRadius: "50%",
-                    padding: "4px",
-                  }}
-                />
+                <div className="position-relative d-inline-block">
+                  <img
+                    src={fotoUrl || "/images/usuario_padrao.png"}
+                    alt="Foto de Perfil"
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <img
+                    src="/images/edite-sua-foto.png"
+                    alt="Editar Foto"
+                    onClick={() => setShowModal(true)}
+                    style={{
+                      position: "absolute",
+                      bottom: "0",
+                      right: "0",
+                      width: "28px",
+                      height: "28px",
+                      cursor: "pointer",
+                      backgroundColor: "#fff",
+                      borderRadius: "50%",
+                      padding: "4px",
+                    }}
+                  />
+                </div>
+                <h5 className="mb-0 fw-bold mt-3">{usuario?.nome || "Aluno"}</h5>
               </div>
-              <h5 className="mb-0 fw-bold mt-3">{usuario?.nome || "Aluno"}</h5>
-            </div>
 
-            <div className="mt-4 mb-4 p-3 rounded" style={{
-              backgroundColor: "#f0f0f0",
-              maxHeight: "350px",
-              height: "300px",
-              position: "relative",
-            }}>
-              <div className="mb-3" style={{ position: "relative" }}>
-                <h5 className="text-center mb-0">Biografia</h5>
-                <img
-                  src="/images/editar.png"
-                  alt="Editar"
-                  onClick={() => {
-                    setNovaBiografia(biografia);
-                    setShowBioModal(true);
-                  }}
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    cursor: "pointer",
-                    position: "absolute",
-                    top: "0px",
-                    right: "0px",
-                  }}
-                  title="Editar biografia"
-                />
+              <div className="mt-4 mb-4 p-3 rounded"
+                style={{
+                  backgroundColor: "#f0f0f0",
+                  maxHeight: "350px",
+                  height: "300px",
+                  position: "relative",
+                }}>
+                <div className="mb-3" style={{ position: "relative" }}>
+                  <h5 className="text-center mb-0">Biografia</h5>
+                  <img
+                    src="/images/editar.png"
+                    alt="Editar"
+                    onClick={() => {
+                      setNovaBiografia(biografia);
+                      setShowBioModal(true);
+                    }}
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      cursor: "pointer",
+                      position: "absolute",
+                      top: "0px",
+                      right: "0px",
+                    }}
+                    title="Editar biografia"
+                  />
+                </div>
+                <p style={{ whiteSpace: 'pre-wrap', fontSize: "1.05rem" }}>
+                  {biografia || "Nenhuma biografia cadastrada."}</p>
               </div>
-              <p style={{ whiteSpace: 'pre-wrap', fontSize: "1.05rem" }}>
-                {biografia || "Nenhuma biografia cadastrada."}</p>
-            </div>
-            
-             <ListarAgendamentosAluno limite={3} comNavs={false}/>
-
-            <div className="d-grid gap-2">
-              <button className="btn btn-primary" onClick={() => navigate("/cadastrovagas")}>
-                Cadastrar vagas
-              </button>
-              <button className="btn btn-primary" onClick={() => navigate("/vagas")}>
-                Lista vagas
-              </button>
-              <button className="btn btn-primary mt-3" onClick={() => navigate("/postar")}>
-                Postar sua dúvida
-              </button>
-              <button className="btn btn-primary mt-3" onClick={() => navigate("/agendamentos/aluno")}>
-                Acessar Agendamentos
-              </button>
+              <ListarAgendamentosAluno limite={3} comNavs={false} />
             </div>
           </div>
 
           {/* Coluna direita - Posts */}
           <div className="col-md-7">
-            <h5 className="text-center">Criar novo post</h5>
+            <h5 className="text-center mb-3">Criar novo post</h5>
             <div className="mb-4 border p-3 rounded">
-              <input
-                type="text"
-                placeholder="Título"
-                className="mb-2 p-2 border rounded w-100"
-                value={tituloPost}
-                onChange={(e) => setTituloPost(e.target.value)}
-                disabled={loadingPost}
-              />
-              <textarea
-                placeholder="O que você gostaria de compartilhar?"
-                className="mb-2 p-2 border rounded w-100"
-                rows={3}
-                value={conteudoPost}
-                onChange={(e) => setConteudoPost(e.target.value)}
-                disabled={loadingPost}
-                style={{ resize: "none", overflowY: "auto" }}
-              ></textarea>
-              <div className="d-flex justify-content-end align-items-center">
-                {mensagemPost && (
-                  <p className="mt-0 text-success">{mensagemPost}</p>
-                )}
+              <div className="d-flex align-items-center gap-2">
+                <img
+                  src={fotoUrl || "/images/usuario_padrao.png"}
+                  alt="Foto do autor"
+                  style={{
+                    width: "45px",
+                    height: "45px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+                <textarea
+                  placeholder="O que você gostaria de compartilhar?"
+                  className="form-control"
+                  rows={2}
+                  value={tituloPost}
+                  onChange={(e) => setTituloPost(e.target.value)}
+                  disabled={loadingPost}
+                  style={{ resize: "none", overflowY: "auto" }}
+                ></textarea>
+                <textarea
+                  placeholder="O que você gostaria de compartilhar?"
+                  className="form-control"
+                  rows={2}
+                  value={conteudoPost}
+                  onChange={(e) => setConteudoPost(e.target.value)}
+                  disabled={loadingPost}
+                  style={{ resize: "none", overflowY: "auto" }}
+                ></textarea>
 
                 <img
                   src="/images/enviado.png"
                   alt="Postar"
                   onClick={handlePostar}
+                  className="botao-enviar"
                   style={{
                     width: 36,
                     height: 36,
                     cursor: loadingPost ? "not-allowed" : "pointer",
                     opacity: loadingPost ? 0.5 : 1,
+                    transition: "transform 0.2s ease-in-out"
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1.0)"}
                 />
               </div>
+              {mensagemPost && (
+                <p className="mt-2 text-success text-end">{mensagemPost}</p>
+              )}
             </div>
 
-            {meusPosts.map((post) => (
+
+           {meusPosts.map((post) => (
               <div
                 key={post._id}
                 className="card mb-3 shadow-sm position-relative"
@@ -438,7 +442,7 @@ const PainelAluno = () => {
                 </div>
                 <div className="modal-footer">
                   <button
-                    className="btn btn-secondary"
+                    className="btn"
                     style={{
                       backgroundColor: "var(--red-light)",
                       color: "#fff"
@@ -461,54 +465,56 @@ const PainelAluno = () => {
       }
 
       {/* MODAL DE BIOGRAFIA */}
-      {showBioModal && (
-        <div
-          className="modal fade show d-block"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Editar Biografia</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowBioModal(false)}
-                ></button>
-              </div>
+      {
+        showBioModal && (
+          <div
+            className="modal fade show d-block"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Editar Biografia</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setShowBioModal(false)}
+                  ></button>
+                </div>
 
-              <div className="modal-body">
-                <textarea
-                  className="form-control"
-                  style={{
-                    height: '100px',
-                    resize: 'none'
-                  }}
-                  value={novaBiografia}
-                  onChange={(e) => setNovaBiografia(e.target.value)}
-                  maxLength={500}
-                />
-                <small className="text-muted">{novaBiografia.length}/ 500 caracteres</small>
-              </div>
+                <div className="modal-body">
+                  <textarea
+                    className="form-control"
+                    style={{
+                      height: '100px',
+                      resize: 'none'
+                    }}
+                    value={novaBiografia}
+                    onChange={(e) => setNovaBiografia(e.target.value)}
+                    maxLength={500}
+                  />
+                  <small className="text-muted">{novaBiografia.length}/ 500 caracteres</small>
+                </div>
 
-              <div className="modal-footer">
-                <button
-                  className="btn"
-                  style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
-                  onClick={() => setShowBioModal(false)}
-                > Cancelar
-                </button>
-                <button
-                  className="btn"
-                  style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
-                  onClick={handleSalvarBiografia}
-                > Salvar
-                </button>
+                <div className="modal-footer">
+                  <button
+                    className="btn"
+                    style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
+                    onClick={() => setShowBioModal(false)}
+                  > Cancelar
+                  </button>
+                  <button
+                    className="btn"
+                    style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
+                    onClick={handleSalvarBiografia}
+                  > Salvar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </>
   );
 };

@@ -71,7 +71,7 @@ export default function Forum() {
       setTitulo("");
       setConteudo("");
       setMensagem("Post criado com sucesso!");
-      buscarPosts(); // atualiza lista
+      buscarPosts(); 
     } catch (err) {
       console.error("Erro ao postar:", err);
       setMensagem("Erro ao criar post");
@@ -180,7 +180,7 @@ export default function Forum() {
             <div className="mb-3">
               <input
                 type="text"
-                className="form-control"
+                className="custom-input form-control"
                 placeholder="Título"
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
@@ -189,7 +189,7 @@ export default function Forum() {
             </div>
             <div className="mb-3">
               <textarea
-                className="form-control"
+                className="custom-input form-control"
                 rows={3}
                 placeholder="O que você gostaria de compartilhar?"
                 value={conteudo}
@@ -260,7 +260,7 @@ export default function Forum() {
                           }))
                         }
                         placeholder="Escreva uma resposta..."
-                        className="form-control"
+                        className="custom-input form-control"
                         rows={2}
                         style={{ resize: 'none' }}
                         disabled={loading}
