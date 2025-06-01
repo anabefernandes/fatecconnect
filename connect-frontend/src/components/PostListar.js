@@ -15,15 +15,23 @@ export default function Forum() {
   const [titulo, setTitulo] = useState("");
   //const [conteudo, setConteudo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mensagem, setMensagem] = useState(null);
+  const [setMensagem] = useState(null);
   const [posts, setPosts] = useState([]);
   const [filtroTitulo] = useState("");
   const [respostas, setRespostas] = useState({});
   const token = localStorage.getItem("token");
   const [monitores, setMonitores] = useState([]);
-  
+  const [fotoUrl] = useState(null);
+
+  const [respostasVisiveis, setRespostasVisiveis] = useState({});
 
   const navigate = useNavigate();
+
+  const usuarioId = JSON.parse(localStorage.getItem("user"))?._id;
+
+  const usuarioCurtiu = (post) => {
+    return post.likes?.includes(usuarioId);
+  };
 
   useEffect(() => {
     const fetchMonitores = async () => {
@@ -67,12 +75,12 @@ export default function Forum() {
     try {
       await axios.post(
         "https://fatecconnect-backend.onrender.com/api/postar",
-        { titulo},
+        { titulo },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setTitulo("");
       setMensagem("Post criado com sucesso!");
-      buscarPosts(); 
+      buscarPosts();
     } catch (err) {
       console.error("Erro ao postar:", err);
       setMensagem("Erro ao criar post");
@@ -102,16 +110,16 @@ export default function Forum() {
   const curtirPost = async (postId) => {
     try {
       await axios.post(
-  `http://localhost:5000/api/posts/${postId}/curtir`,
-  {},
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
-    buscarPosts(); // atualiza likes
-} catch (err) {
+        `http://localhost:5000/api/posts/${postId}/curtir`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      buscarPosts(); // atualiza likes
+    } catch (err) {
       console.error("Erro ao curtir post:", err);
     }
   };
@@ -144,7 +152,7 @@ export default function Forum() {
           ) : (
             <Swiper
               modules={[Navigation]}
-              spaceBetween={10}
+              spaceBetween={2}
               slidesPerView={2}
               centeredSlides
               loop={monitores.length >= 3}
@@ -153,6 +161,23 @@ export default function Forum() {
                 prevEl: ".swiper-button-prev-custom",
               }}
               className="mySwiper"
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                },
+                576: {
+                  slidesPerView: 1.5,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                992: {
+                  slidesPerView: 3,
+                },
+                1200: {
+                  slidesPerView: 4,
+                },
+              }}
             >
               {monitores.map((monitor) => (
                 <SwiperSlide key={monitor._id}>
@@ -196,24 +221,35 @@ export default function Forum() {
         {/* Formulário para criar novo post */}
         <hr className="container my-5" />
 
-        <section className="mx-auto" style={{ maxWidth: 900 }}>
-          {/*<h3 className="text-center mb-4">Criar novo post</h3>*/}
-          <div className="p-4 rounded shadow-sm border bg-white">
-            <div className="mb-3">
+        <section className="container my-5" style={{ maxWidth: 920 }}>
+          <div className="d-flex align-items-center gap-3 p-3 border rounded shadow-sm bg-white">
+            <img
+              src={fotoUrl || "/images/usuario_padrao.png"}
+              alt="Foto do autor"
+              style={{
+                width: "45px",
+                height: "45px",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
+
+            <div className="flex-grow-1">
               <input
                 type="text"
                 className="custom-input form-control"
-                placeholder="Título"
+                placeholder="No que você está pensando?"
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 disabled={loading}
+                style={{ borderRadius: 20, padding: "20px 20px" }}
               />
             </div>
-            <div className="d-flex justify-content-end align-items-center gap-3">
-              {mensagem && <p className="text-success mb-0">{mensagem}</p>}
+
+            <div>
               <img
                 src="/images/enviado.png"
-                alt="Postar"
+                alt="Enviar"
                 onClick={loading ? undefined : postar}
                 style={{
                   width: 36,
@@ -227,94 +263,134 @@ export default function Forum() {
         </section>
 
         <section className="container my-5" style={{ maxWidth: 920 }}>
-          <h2 className="text-center mb-5" style={{ fontSize: '2rem' }}>Posts Recentes</h2>
+          <h2 className="text-center mb-5" style={{ fontSize: "2rem" }}>
+            Posts Recentes
+          </h2>
 
           {posts.length === 0 ? (
             <p className="text-center text-muted fst-italic">Nenhum post encontrado.</p>
           ) : (
-            <div>
-              {posts.map((post) => (
+            posts.map((post) => {
+              const mostrarRespostas = respostasVisiveis[post._id];
+
+              return (
                 <div key={post._id} className="card mb-4 shadow-sm">
                   <div className="card-body">
+                    {/* Header com imagem + nome */}
                     <div className="d-flex align-items-center mb-3">
                       <img
-                        src={
-                          post.autor?.foto
-                            ? `https://fatecconnect-backend.onrender.com${post.autor.foto}`
-                            : "/images/usuario-padrao.png"
-                        }
-                        alt={post.autor?.nome || "Usuário"}
-                        className="rounded-circle me-3"
-                        style={{ width: 50, height: 50, objectFit: "cover" }}
+                        src={fotoUrl || "/images/usuario_padrao.png"}
+                        alt="Foto do autor"
+                        style={{
+                          width: "45px",
+                          height: "45px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
                       />
-                      <span className="fw-semibold" style={{ fontSize: '1.1rem' }}>
+                      <span className="fw-semibold" style={{ fontSize: "1.1rem", marginLeft: "10px" }}>
                         {post.autor?.nome || "Desconhecido"}
                       </span>
                     </div>
 
-                    <h3 className="card-title fw-bold" style={{ fontSize: '1.4rem' }}>
+                    {/* Conteúdo do post */}
+                    <h3 className="card-title fw-medizzzz" style={{ fontSize: "1.4rem" }}>
                       {post.titulo}
                     </h3>
 
-                    <button
-                      onClick={() => curtirPost(post._id)}
-                        className="text-red-600 hover:underline">
-                          Curtir ({post.likes?.length || 0})
-                    </button>
+                    {/* Botões Curtir e Comentar */}
 
-                    <div className="d-flex align-items-center mb-4 gap-2">
-                      <textarea
-                        value={respostas[post._id] || ""}
-                        onChange={(e) =>
-                          setRespostas((prev) => ({
+                    <div className="d-flex justify-content-start gap-3 mb-2 px-2">
+                      <small className="text-muted">{post.likes?.length || 0} curtidas</small>
+                      <small className="text-muted">{post.respostas?.length || 0} comentário(s)</small>
+                    </div>
+
+                    {/* Botões Curtir e Comentar centralizados horizontalmente */}
+                    <div className="d-flex justify-content-center gap-2 mt-auto">
+                      <button
+                        onClick={() => curtirPost(post._id)}
+                        className={`btn btn-like flex-fill ${usuarioCurtiu(post) ? "curtido" : ""}`}
+                        style={{ maxWidth: "500px" }}
+                      >
+                        ❤️ Curtir
+                      </button>
+
+                      <button
+                        className="btn btn-comment flex-fill"
+                        style={{ maxWidth: "500px" }}
+                        onClick={() =>
+                          setRespostasVisiveis((prev) => ({
                             ...prev,
-                            [post._id]: e.target.value,
+                            [post._id]: !prev[post._id],
                           }))
                         }
-                        placeholder="Escreva uma resposta..."
-                        className="custom-input form-control"
-                        rows={2}
-                        style={{ resize: 'none' }}
-                        disabled={loading}
-                      />
-                      <img
-                        src="/images/enviado.png"
-                        alt="Enviar resposta"
-                        onClick={() => {
-                          if (!loading && respostas[post._id]?.trim()) enviarResposta(post._id);
-                        }}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          cursor: loading || !respostas[post._id]?.trim() ? "not-allowed" : "pointer",
-                          opacity: loading || !respostas[post._id]?.trim() ? 0.5 : 1,
-                        }}
-                        title="Enviar resposta"
-                      />
+                      >
+                        💬 Comentar
+                      </button>
                     </div>
 
-                    {/* Respostas */}
-                    <div className="border-start border-4 border-danger ps-3">
-                      <h5 className="fw-semibold mb-3">Respostas:</h5>
-                      {post.respostas?.length > 0 ? (
-                        <ul className="list-group list-group-flush">
-                          {post.respostas.map((resp, i) => (
-                            <li key={i} className="list-group-item px-0 py-1">
-                              <span className="fw-semibold">{resp.autor?.nome || "Anônimo"}: </span>
-                              <span>{resp.conteudo}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-muted fst-italic">Sem respostas ainda.</p>
-                      )}
-                    </div>
+                    <br />
+                    {/* Comentários e respostas */}
+                    {mostrarRespostas && (
+                      <>
+                        <div className="d-flex align-items-end gap-2 mb-3">
+                          <textarea
+                            value={respostas[post._id] || ""}
+                            onChange={(e) =>
+                              setRespostas((prev) => ({
+                                ...prev,
+                                [post._id]: e.target.value,
+                              }))
+                            }
+                            placeholder="Escreva uma resposta..."
+                            className="form-control"
+                            rows={2}
+                            style={{ resize: "none" }}
+                            disabled={loading}
+                          />
+                          <img
+                            src="/images/enviado.png"
+                            alt="Enviar resposta"
+                            onClick={() => {
+                              if (!loading && respostas[post._id]?.trim()) enviarResposta(post._id);
+                            }}
+                            style={{
+                              width: 36,
+                              height: 36,
+                              cursor:
+                                loading || !respostas[post._id]?.trim() ? "not-allowed" : "pointer",
+                              opacity:
+                                loading || !respostas[post._id]?.trim() ? 0.5 : 1,
+                              alignSelf: "center",
+                            }}
+                            title="Enviar resposta"
+                          />
+                        </div>
+
+                        {/* Respostas visíveis */}
+                        {post.respostas?.length > 0 ? (
+                          <div className="border-start border-3 ps-3 border-danger">
+                            {post.respostas.map((resp, i) => (
+                              <div key={i} className="mb-2">
+                                <strong>{resp.autor?.nome || "Anônimo"}: </strong>
+                                <span>{resp.conteudo}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-muted fst-italic ps-2">
+                            Sem respostas ainda.
+                          </p>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })
           )}
         </section>
+
 
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/PainelAluno.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,12 +14,12 @@ const PainelAluno = () => {
 
   const [tituloPost, setTituloPost] = useState("");
   //const [conteudoPost, setConteudoPost] = useState("");
+  const postInputRef = useRef(null);
+
   const [loadingPost, setLoadingPost] = useState(false);
   const [mensagemPost, setMensagemPost] = useState(null);
   const [editando, setEditando] = useState(false);
   const [postEditandoId, setPostEditandoId] = useState(null);
-
-
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,31 +34,40 @@ const PainelAluno = () => {
 
   const [meusPosts, setMeusPosts] = useState([]);
 
+  const mostrarMensagemTemporaria = (msg, duracao = 3000) => {
+    setMensagemPost(msg);
+    setTimeout(() => {
+      setMensagemPost(null);
+    }, duracao);
+  };
+
 
   const editarPost = (postId) => {
-  const postSelecionado = meusPosts.find((p) => p._id === postId);
-  if (postSelecionado) {
-    setTituloPost(postSelecionado.titulo);
-    setPostEditandoId(postId);
-    setEditando(true);
-  }
-};
+    const postSelecionado = meusPosts.find((p) => p._id === postId);
+    if (postSelecionado) {
+      setTituloPost(postSelecionado.titulo);
+      setPostEditandoId(postId);
+      setEditando(true);
+
+      postInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
 
   const excluirPost = async (postId) => {
-  if (window.confirm("Tem certeza que deseja excluir este post?")) {
-    try {
-      await api.delete(`/posts/${postId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+    if (window.confirm("Tem certeza que deseja excluir este post?")) {
+      try {
+        await api.delete(`/posts/${postId}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
 
-      setMeusPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
-      alert("Post excluído com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir post:", error);
-      alert("Erro ao excluir o post.");
+        setMeusPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+        alert("Post excluído com sucesso!");
+      } catch (error) {
+        console.error("Erro ao excluir post:", error);
+        alert("Erro ao excluir o post.");
+      }
     }
-  }
-};
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -110,43 +119,43 @@ const PainelAluno = () => {
       return;
     }
 
-     setLoadingPost(true);
-  
+    setLoadingPost(true);
+
     try {
-    if (editando) {
-      await api.put(`/posts/${postEditandoId}`, 
-        { titulo: tituloPost },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      setMensagemPost("Post editado com sucesso!");
-    } else {
-      await api.post(
-        "/postar",
-        { titulo: tituloPost },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      setMensagemPost("Post criado com sucesso!");
+      if (editando) {
+        await api.put(`/posts/${postEditandoId}`,
+          { titulo: tituloPost },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          }
+        );
+        mostrarMensagemTemporaria("Post editado com sucesso!");
+      } else {
+        await api.post(
+          "/postar",
+          { titulo: tituloPost },
+          {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          }
+        );
+        mostrarMensagemTemporaria("Post criado com sucesso!");
+      }
+
+      setTituloPost("");
+      setEditando(false);
+      setPostEditandoId(null);
+
+      const { data } = await api.get("/meus-posts", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setMeusPosts(data);
+    } catch (error) {
+      console.error("Erro ao postar:", error);
+      mostrarMensagemTemporaria("Erro ao salvar post");
+    } finally {
+      setLoadingPost(false);
     }
-
-    setTituloPost("");
-    setEditando(false);
-    setPostEditandoId(null);
-
-    const { data } = await api.get("/meus-posts", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    setMeusPosts(data);
-  } catch (error) {
-    console.error("Erro ao postar:", error);
-    setMensagemPost("Erro ao salvar post");
-  } finally {
-    setLoadingPost(false);
-  }
-};
+  };
 
 
   const handleSalvarBiografia = async () => {
@@ -301,14 +310,49 @@ const PainelAluno = () => {
                 <p style={{ whiteSpace: 'pre-wrap', fontSize: "1.05rem" }}>
                   {biografia || "Nenhuma biografia cadastrada."}</p>
               </div>
-              <ListarAgendamentosAluno limite={3} comNavs={false} />
+              <ListarAgendamentosAluno limite={3} comNavs={false} mostrarCancelados={false} />
             </div>
           </div>
 
           {/* Coluna direita - Posts */}
-          <div className="col-md-7">
+          <div className="col-md-7 mt-md-0 mt-4">
             <h5 className="text-center mb-3">Criar novo post</h5>
-            <div className="mb-4 border p-3 rounded">
+            <div ref={postInputRef} className="mb-4 border p-3 rounded">
+              {editando && (
+                <div
+                  className="d-flex justify-content-between align-items-center mb-2"
+                  style={{ userSelect: "none" }}
+                >
+                  <small className="text-black fw-bold">Editando post...</small>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditando(false);
+                      setPostEditandoId(null);
+                      setTituloPost("");
+                    }}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      lineHeight: 1,
+                    }}
+                    aria-label="Cancelar edição"
+                    title="Cancelar edição"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="30"
+                      height="30"
+                      fill="currentColor"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M4.646 4.646a.5.5 0 011 0L8 6.293l2.354-2.647a.5.5 0 11.707.708L8.707 7l2.647 2.354a.5.5 0 11-.708.707L8 7.707l-2.354 2.647a.5.5 0 01-.707-.708L7.293 7 4.646 4.646z" />
+                    </svg>
+                  </button>
+                </div>
+              )}
               <div className="d-flex align-items-center gap-2">
                 <img
                   src={fotoUrl || "/images/usuario_padrao.png"}
@@ -320,6 +364,7 @@ const PainelAluno = () => {
                     objectFit: "cover",
                   }}
                 />
+
                 <textarea
                   placeholder="O que você gostaria de compartilhar?"
                   className="form-control"
@@ -351,7 +396,7 @@ const PainelAluno = () => {
             </div>
 
 
-           {meusPosts.map((post) => (
+            {meusPosts.map((post) => (
               <div
                 key={post._id}
                 className="card mb-3 shadow-sm position-relative"
@@ -402,11 +447,10 @@ const PainelAluno = () => {
                     </strong>
                   </div>
 
-                  <h6 className="card-title fw-bold">{post.titulo}</h6>
-                  <p className="card-text" style={{ whiteSpace: "pre-wrap" }}>
-                    {post.conteudo.length > 150
-                      ? post.conteudo.substring(0, 150) + "..."
-                      : post.conteudo}
+                  <p className="card-text text-dark" style={{ whiteSpace: "pre-wrap" }}>
+                    {post.titulo.length > 150
+                      ? post.titulo.substring(0, 150) + "..."
+                      : post.titulo}
                   </p>
 
                   <div className="d-flex justify-content-between align-items-center">

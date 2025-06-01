@@ -1,55 +1,55 @@
 .navbar-main {
-    background-color: var(--red-light);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .logo-img {
-    height: 40px;
-  }
-  
-  .search-bar {
-    position: relative;
-    background-color: white;
-    border-radius: 20px;
-    width: 50%;
-    max-width: 610px;
-    height: 38px;
-    left: 36px;
-  }
-  
-  .search-icon-img {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 18px;
-    pointer-events: none;
-  }
-  
-  .search-input {
-    border: none;
-    background-color: transparent;
-    outline: none;
-    padding: 6px 12px 6px 38px; 
-    width: 100%;
-    border-radius: 20px;
-    font-size: 14px;
-    box-shadow: none;
-  }
-  
-  .search-input:focus {
-    outline: none;
-    box-shadow: none;
-  }
-  
-  .logout-img {
-    height: 30px;
-    cursor: pointer;
-  }
+  background-color: var(--red-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
 
-  .subnavbar-container {
+.logo-img {
+  height: 40px;
+}
+
+.search-bar {
+  position: relative;
+  background-color: white;
+  border-radius: 20px;
+  width: 50%;
+  max-width: 610px;
+  height: 38px;
+  left: 36px;
+}
+
+.search-icon-img {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 18px;
+  pointer-events: none;
+}
+
+.search-input {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  padding: 6px 12px 6px 38px;
+  width: 100%;
+  border-radius: 20px;
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.logout-img {
+  height: 30px;
+  cursor: pointer;
+}
+
+.subnavbar-container {
   background-color: var(--white);
   border-bottom: 1px solid #fffbfb;
   box-shadow: #ccc 0px 1px 2px;
@@ -70,4 +70,71 @@
 .subnavbar-icon {
   width: 95px;
   height: 25px;
+}
+
+/* Responsividade da NAVBAR */
+@media (max-width: 768px) {
+  .search-bar {
+    width: 60%;
+    left: 0;
+    margin: 0 auto;
+  }
+
+  .logo-img {
+    height: 35px;
+  }
+
+  .logout-img {
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-bar {
+    width: 50%;
+    left: 0;
+    margin: 0 auto;
+  }
+
+  .logo-img {
+    height: 30px;
+  }
+
+  .logout-img {
+    height: 24px;
+  }
+
+  .search-input {
+    font-size: 13px;
+  }
+}
+
+/* Responsividade da SUBNAVBAR */
+@media (max-width: 768px) {
+  .subnavbar-container {
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+
+  .subnavbar-btn {
+    padding: 4px 6px;
+    font-size: 13px;
+  }
+
+  .subnavbar-icon {
+    width: 80px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .subnavbar-btn {
+    padding: 3px 5px;
+    font-size: 12px;
+  }
+
+  .subnavbar-icon {
+    width: 68px;
+    height: 21px;
+  }
 }

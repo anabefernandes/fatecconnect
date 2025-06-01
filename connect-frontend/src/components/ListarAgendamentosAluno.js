@@ -6,12 +6,16 @@ import NavBar from "./Navbar";
 import SubNavBar from "./SubNavbar";
 import MiniAgendamentos from "./MiniAgendamentos";
 
-export default function ListarAgendamentosAluno({ limite, comNavs = true }) {
+export default function ListarAgendamentosAluno({ limite, comNavs = true, mostrarCancelados = false }) {
   const [agendamentos, setAgendamentos] = useState([]);
   const [erro, setErro] = useState(null);
   const [mensagem, setMensagem] = useState(null);
 
   const token = localStorage.getItem("token");
+
+  const agendamentosFiltrados = mostrarCancelados
+    ? agendamentos // mostra todos, inclusive cancelados
+    : agendamentos.filter((ag) => ag.status !== "cancelado");
 
   useEffect(() => {
     if (!token) {
@@ -82,8 +86,8 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true }) {
   };
 
   const agendamentosExibidos = limite
-    ? agendamentos.slice(0, limite)
-    : agendamentos;
+    ? agendamentosFiltrados.slice(0, limite)
+    : agendamentosFiltrados;
 
   return (
     <>
@@ -103,7 +107,7 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true }) {
 
         {erro && <div className="alert alert-danger">{erro}</div>}
         {mensagem && <div className="alert alert-success">{mensagem}</div>}
-
+        
         <MiniAgendamentos
           agendamentos={agendamentosExibidos}
           cancelarAgendamento={cancelarAgendamento}

@@ -1,6 +1,6 @@
 /* Container geral do carrossel */
 .mySwiper {
-  max-width: 800px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 1rem 0;
   position: relative;
@@ -10,11 +10,13 @@
 .swiper-slide {
   display: flex;
   justify-content: center;
+  padding: 5px;
 }
 
 /* Card de monitor: horizontal, espaçoso */
 .card-monitor {
-  width: 300px;
+  width: 100%;
+  max-width: 350px;
   height: 180px;
   display: flex;
   flex-direction: row;
@@ -101,4 +103,87 @@ textarea.custom-input {
 hr{
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   height: 2px;
+}
+
+.btn-like,
+.btn-comment {
+  background-color: #f0f0f0; /* cinza claro */
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-weight: 500;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-like:hover,
+.btn-comment:hover {
+  background-color: var(--red-light); 
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+
+.btn-comment:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #ccc;
+  color: #fff;
+}
+
+.btn-like.curtido {
+  background-color: var(--red-light);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .card-monitor {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .card-monitor img {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .monitor-info {
+    align-items: center;
+  }
+
+  .card-monitor .icon-actions {
+    position: static;
+    margin-top: 0.5rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .swiper-navigation-custom {
+    top: 55%;
+    left: 5%;
+    right: 5%;
+  }
+
+  .swiper-navigation-custom img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .card-monitor {
+    width: 100%;
+    padding: 0.75rem;
+  }
+
+  .card-monitor img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .card-monitor .icon-actions img {
+    width: 20px;
+    height: 20px;
+  }
 }
