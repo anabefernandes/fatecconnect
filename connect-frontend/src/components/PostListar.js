@@ -13,14 +13,15 @@ import { Navigation } from "swiper/modules";
 
 export default function Forum() {
   const [titulo, setTitulo] = useState("");
-  const [conteudo, setConteudo] = useState("");
+  //const [conteudo, setConteudo] = useState("");
   const [loading, setLoading] = useState(false);
   const [mensagem, setMensagem] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [filtroTitulo, setFiltroTitulo] = useState("");
+  const [filtroTitulo] = useState("");
   const [respostas, setRespostas] = useState({});
   const token = localStorage.getItem("token");
   const [monitores, setMonitores] = useState([]);
+  
 
   const navigate = useNavigate();
 
@@ -51,13 +52,14 @@ export default function Forum() {
     }
   }, [filtroTitulo]);
 
+
   useEffect(() => {
     buscarPosts();
   }, [buscarPosts]);
 
   const postar = async () => {
-    if (!titulo || !conteudo) {
-      alert("Preencha todos os campos");
+    if (!titulo) {
+      alert("Preencha o campo");
       return;
     }
 
@@ -65,11 +67,10 @@ export default function Forum() {
     try {
       await axios.post(
         "https://fatecconnect-backend.onrender.com/api/postar",
-        { titulo, conteudo },
+        { titulo},
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setTitulo("");
-      setConteudo("");
       setMensagem("Post criado com sucesso!");
       buscarPosts(); 
     } catch (err) {
@@ -97,6 +98,27 @@ export default function Forum() {
       console.error("Erro ao enviar resposta:", err);
     }
   };
+
+  const curtirPost = async (postId) => {
+    try {
+      await axios.post(
+  `http://localhost:5000/api/posts/${postId}/curtir`,
+  {},
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+    buscarPosts(); // atualiza likes
+} catch (err) {
+      console.error("Erro ao curtir post:", err);
+    }
+  };
+
+  useEffect(() => {
+    buscarPosts();
+  }, [buscarPosts]);
 
   return (
     <div>
@@ -187,18 +209,6 @@ export default function Forum() {
                 disabled={loading}
               />
             </div>
-            <div className="mb-3">
-              <textarea
-                className="custom-input form-control"
-                rows={3}
-                placeholder="O que você gostaria de compartilhar?"
-                value={conteudo}
-                onChange={(e) => setConteudo(e.target.value)}
-                disabled={loading}
-                style={{ resize: "none", overflowY: "auto" }}
-              ></textarea>
-            </div>
-
             <div className="d-flex justify-content-end align-items-center gap-3">
               {mensagem && <p className="text-success mb-0">{mensagem}</p>}
               <img
@@ -246,9 +256,11 @@ export default function Forum() {
                       {post.titulo}
                     </h3>
 
-                    <p className="card-text mb-4" style={{ whiteSpace: 'pre-wrap' }}>
-                      {post.conteudo}
-                    </p>
+                    <button
+                      onClick={() => curtirPost(post._id)}
+                        className="text-red-600 hover:underline">
+                          Curtir ({post.likes?.length || 0})
+                    </button>
 
                     <div className="d-flex align-items-center mb-4 gap-2">
                       <textarea

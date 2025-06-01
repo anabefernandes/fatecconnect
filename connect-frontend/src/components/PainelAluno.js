@@ -13,9 +13,12 @@ const PainelAluno = () => {
   const navigate = useNavigate();
 
   const [tituloPost, setTituloPost] = useState("");
-  const [conteudoPost, setConteudoPost] = useState("");
+  //const [conteudoPost, setConteudoPost] = useState("");
   const [loadingPost, setLoadingPost] = useState(false);
   const [mensagemPost, setMensagemPost] = useState(null);
+  const [editando, setEditando] = useState(false);
+  const [postEditandoId, setPostEditandoId] = useState(null);
+
 
 
   const [showModal, setShowModal] = useState(false);
@@ -31,18 +34,31 @@ const PainelAluno = () => {
 
   const [meusPosts, setMeusPosts] = useState([]);
 
-  const editarPost = (postId) => {
-    // Exemplo: redirecionar ou abrir modal
-    console.log("Editar post:", postId);
-  };
 
-  const excluirPost = (postId) => {
-    // Exemplo: confirmação + remoção
-    if (window.confirm("Tem certeza que deseja excluir este post?")) {
-      console.log("Excluir post:", postId);
-      // Chamada à API para deletar
+  const editarPost = (postId) => {
+  const postSelecionado = meusPosts.find((p) => p._id === postId);
+  if (postSelecionado) {
+    setTituloPost(postSelecionado.titulo);
+    setPostEditandoId(postId);
+    setEditando(true);
+  }
+};
+
+  const excluirPost = async (postId) => {
+  if (window.confirm("Tem certeza que deseja excluir este post?")) {
+    try {
+      await api.delete(`/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+
+      setMeusPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+      alert("Post excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir post:", error);
+      alert("Erro ao excluir o post.");
     }
-  };
+  }
+};
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -89,35 +105,48 @@ const PainelAluno = () => {
   }, [navigate]);
 
   const handlePostar = async () => {
-    if (!tituloPost.trim() || !conteudoPost.trim()) {
+    if (!tituloPost.trim()) {
       alert("Preencha todos os campos para postar.");
       return;
     }
 
-    setLoadingPost(true);
+     setLoadingPost(true);
+  
     try {
-      await api.post(
-        "/postar",
-        { titulo: tituloPost, conteudo: conteudoPost },
+    if (editando) {
+      await api.put(`/posts/${postEditandoId}`, 
+        { titulo: tituloPost },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      setTituloPost("");
-      setConteudoPost("");
+      setMensagemPost("Post editado com sucesso!");
+    } else {
+      await api.post(
+        "/postar",
+        { titulo: tituloPost },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setMensagemPost("Post criado com sucesso!");
-
-      const { data } = await api.get("/meus-posts", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setMeusPosts(data);
-    } catch (error) {
-      console.error("Erro ao criar post:", error);
-      setMensagemPost("Erro ao criar post");
-    } finally {
-      setLoadingPost(false);
     }
-  };
+
+    setTituloPost("");
+    setEditando(false);
+    setPostEditandoId(null);
+
+    const { data } = await api.get("/meus-posts", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    setMeusPosts(data);
+  } catch (error) {
+    console.error("Erro ao postar:", error);
+    setMensagemPost("Erro ao salvar post");
+  } finally {
+    setLoadingPost(false);
+  }
+};
 
 
   const handleSalvarBiografia = async () => {
@@ -300,16 +329,6 @@ const PainelAluno = () => {
                   disabled={loadingPost}
                   style={{ resize: "none", overflowY: "auto" }}
                 ></textarea>
-                <textarea
-                  placeholder="O que você gostaria de compartilhar?"
-                  className="form-control"
-                  rows={2}
-                  value={conteudoPost}
-                  onChange={(e) => setConteudoPost(e.target.value)}
-                  disabled={loadingPost}
-                  style={{ resize: "none", overflowY: "auto" }}
-                ></textarea>
-
                 <img
                   src="/images/enviado.png"
                   alt="Postar"
@@ -363,6 +382,7 @@ const PainelAluno = () => {
                   >
                     Excluir
                   </button>
+
                 </div>
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-2">

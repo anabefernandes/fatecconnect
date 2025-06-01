@@ -8,14 +8,14 @@ const respostaSchema = new mongoose.Schema({
 
 const ForumSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
-  conteudo: { type: String, required: true },
   autor: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
     required: true 
   },
   dataCriacao: { type: Date, default: Date.now },
-  respostas: [respostaSchema]
+  respostas: [respostaSchema],
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }); 
 
 module.exports = mongoose.model('Forum', ForumSchema);
