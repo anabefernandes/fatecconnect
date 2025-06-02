@@ -22,7 +22,6 @@ import Agendamentos from "./components/Agendamentos";
 import RedefinirSenha from "./components/RedefinicaoSenhaUnificada";
 import SolicitarRedefinicao from "./components/RedefinicaoSenhaUnificada";
 import AgendarMonitoria from "./components/AgendarMonitoria";
-import CadastroVaga from "./components/CadastroVaga";
 import ListarVagas from "./components/ListarVagas";
 import Posts from "./components/PostListar";
 import Responder from "./components/PostListar";
@@ -69,7 +68,6 @@ const App = () => {
         />
         <Route path="/redefinir-senha/:token" element={<RedefinirSenha />} />
 
-        <Route path="/cadastrovagas" element={<CadastroVaga />} />
         <Route path="/vagas" element={<ListarVagas />} />
         <Route path="/posts" element={<Posts />} />
         <Route path="/responder" element={<Responder />} />

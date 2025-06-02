@@ -10,6 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import Chat from "./chat/Chat";
 
 export default function Forum() {
   const [titulo, setTitulo] = useState("");
@@ -207,7 +208,7 @@ export default function Forum() {
                         src="/images/agenda-monitor.png"
                         alt="Agendar"
                         title="Agendar"
-                        onClick={() => navigate(`/agendar/${monitor._id}`)}
+                        onClick={() => navigate(`/agendar-monitoria/${monitor._id}`)}
                       />
                     </div>
                   </div>
@@ -217,7 +218,7 @@ export default function Forum() {
           )}
         </section>
 
-
+        <Chat />
         {/* Formulário para criar novo post */}
         <hr className="container my-5" />
 
@@ -390,8 +391,6 @@ export default function Forum() {
             })
           )}
         </section>
-
-
       </div>
     </div>
   );

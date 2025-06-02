@@ -38,11 +38,11 @@ h4.text-danger {
   gap: 20px;
   position: relative;
   padding: 0 30px;
-  transition: transform 0.3s ease; 
+  transition: transform 0.3s ease;
 }
 
 .beneficio:hover {
-  transform: scale(1.05); 
+  transform: scale(1.05);
 }
 
 .beneficio:not(:last-child)::after {
@@ -128,7 +128,6 @@ h4.text-danger {
     padding: 6px 10px;
   }
 
-
 }
 
 @media (max-width: 768px) {
@@ -151,6 +150,3 @@ h4.text-danger {
     display: none;
   }
 }
-
-
-
