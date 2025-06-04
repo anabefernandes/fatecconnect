@@ -234,7 +234,7 @@ router.post("/login", async (req, res) => {
 
     //token JWT
     const token = jwt.sign(
-      { id: usuario._id, papel: usuario.papel, nomr: usuario.nome },
+      { id: usuario._id, papel: usuario.papel, nome: usuario.nome },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -258,7 +258,7 @@ router.post("/login", async (req, res) => {
         papel: usuario.papel,
         curso: usuario.curso.nome,
         ra: usuario.ra,
-        fotoPerfil: usuario.fotoPerfil,
+        fotoPerfil: usuario.fotoPerfil || "/uploads/usuario_padrao.png",
         biografia: usuario.biografia,
       },
       redirectTo: getDestino(usuario.papel),
