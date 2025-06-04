@@ -1,0 +1,183 @@
+.filtros-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.d-flex.flex-column.gap-3 {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.usuario-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    border-radius: 6px;
+
+}
+
+.usuario-linha {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.usuario-linha:last-child {
+    border-bottom: none;
+}
+
+.usuario-header>div,
+.usuario-linha>div {
+    border-right: 1px solid #ddd;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.usuario-header>div:last-child,
+.usuario-linha>div:last-child {
+    border-right: none;
+}
+
+.usuario-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.usuario-linha>div:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.usuario-linha button {
+    flex: 1;
+    height: 32px;
+    font-size: 0.875rem;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container.my-4 {
+    max-width: 1250px;
+    margin: 2rem auto;
+}
+
+.btn-buscar {
+    background-color: var(--grey);
+    color: var(--black);
+    border: 1px solid #acabab;
+    padding: 5px 5px;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-buscar:hover {
+    background-color: #d6d6d6;
+    transform: scale(1.0);
+    cursor: pointer;
+}
+
+.btn-criamonitor {
+    background-color: var(--red-dark);
+    color: var(--white);
+    border: none;
+    padding: 8px 20px;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-criamonitor:hover {
+    background-color: #b30000;
+    transform: scale(1.0);
+    cursor: pointer;
+}
+
+.btn-danger.btn-sm:hover {
+  background-color: #c82333; 
+  cursor: pointer;
+}
+
+.icone-acao {
+  transition: transform 0.2s ease;
+}
+
+.icone-acao:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  .usuario-header {
+    display: none !important;
+  }
+}
+
+@media (max-width: 780px) {
+  /* Container do usuário vira card */
+  .usuario-linha {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  }
+
+  /* Imagem no topo do card, centralizada */
+  .usuario-linha > div[data-label="Foto"] {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .usuario-avatar {
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* Os demais dados ficam em linhas abaixo da imagem */
+  .usuario-linha > div:not([data-label="Foto"]) {
+    display: flex;
+    justify-content: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    gap: 6px;
+  }
+
+  /* Remove a linha de baixo do último item */
+  .usuario-linha > div:not([data-label="Foto"]):last-child {
+    border-bottom: none;
+  }
+
+  /* Adiciona o label antes do valor, com margem menor */
+  .usuario-linha > div:not([data-label="Foto"])::before {
+    content: attr(data-label) ":";
+    font-weight: 600;
+    color: #555;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+
+  /* Botões de ação ficam lado a lado na última linha */
+  .usuario-linha > div[data-label="Ações"] {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid #ddd;
+    border-bottom: none;
+  }
+
+}

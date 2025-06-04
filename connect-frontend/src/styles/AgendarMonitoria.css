@@ -1,0 +1,91 @@
+.fundo-agendamento {
+  margin-top: 1px;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  flex: 1;
+}
+
+.custom-datepicker-wrapper .react-datepicker {
+  transform: scale(1.1);
+  transform-origin: top;
+}
+
+.label-grande {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coluna-esquerda {
+  background-color: var(--red-light);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.coluna-direita {
+  background-color: var(--white);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 3.5rem
+}
+
+.label-grande svg {
+  font-size: 1.5rem;
+}
+
+.botao-agendar {
+  margin-top: 8rem;
+  width: auto;
+  max-width: 300px;
+}
+
+.react-datepicker {
+  background-color: #fdfdfd;
+  border: 1px solid #ccc;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__header {
+  background-color: var(--red-light);
+  color: #fff;
+  border-bottom: none;
+}
+
+.react-datepicker__day--today {
+  border: 1px solid var(--red-dark);
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--red-light);
+  color: white;
+  border-radius: 0.3rem;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--keyboard-selected:hover {
+  background-color: var(--red-dead) !important;
+  color: #000 !important;
+  border-radius: 0.3rem;
+}
+
+.react-datepicker__time-container {
+  background-color: #f8f8f8;
+  border-left: 1px solid #ddd;
+}
+
+.react-datepicker__time-list-item--selected,
+.react-datepicker__time-list-item--selected:hover {
+  background-color: var(--red-light) !important;
+  color: #fff !important;
+}

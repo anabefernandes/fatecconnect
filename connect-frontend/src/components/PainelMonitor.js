@@ -4,6 +4,7 @@ import "../styles/PainelAluno.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 import api from "../services/api";
 
 const PainelMonitor = () => {
@@ -119,6 +120,7 @@ const PainelMonitor = () => {
   return (
     <>
       <Navbar />
+      <SubNavbar/>
 
       <div className="painel-content p-4">
         <h1>Painel do Monitor</h1>

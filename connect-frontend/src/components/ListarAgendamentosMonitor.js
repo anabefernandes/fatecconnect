@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import Navbar from "./Navbar";
+import SubNavbar from "./SubNavbar";
 
 export default function ListarAgendamentosMonitor() {
   const [agendamentos, setAgendamentos] = useState([]);
@@ -66,6 +68,9 @@ export default function ListarAgendamentosMonitor() {
   };
 
   return (
+     <>
+      <Navbar />
+      <SubNavbar/>
     <div className="max-w-4xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Agendamentos como Monitor</h2>
 
@@ -96,5 +101,6 @@ export default function ListarAgendamentosMonitor() {
         ))}
       </div>
     </div>
+    </>
   );
 }

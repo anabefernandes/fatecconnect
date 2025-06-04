@@ -1,23 +1,18 @@
-/* Container geral do carrossel */
 .mySwiper {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 1rem 0;
-  position: relative;
+  max-width: 910px;
+  padding: 2rem 30px; 
+  overflow: visible; 
 }
 
-/* Slide individual */
 .swiper-slide {
+  width: 280px !important; 
   display: flex;
   justify-content: center;
-  padding: 5px;
 }
 
-/* Card de monitor: horizontal, espaçoso */
 .card-monitor {
-  width: 100%;
-  max-width: 350px;
   height: 180px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -29,7 +24,6 @@
   position: relative;
 }
 
-/* Imagem do monitor */
 .card-monitor img {
   width: 80px;
   height: 80px;
@@ -38,7 +32,6 @@
   margin-right: 1rem;
 }
 
-/* Informações do monitor */
 .monitor-info {
   flex: 1;
   display: flex;
@@ -46,8 +39,7 @@
   gap: 0.25rem;
 }
 
-/* Ícones de ação */
-.card-monitor .icon-actions {
+.icon-actions {
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -55,24 +47,23 @@
   gap: 10px;
 }
 
-.card-monitor .icon-actions img {
+.icon-actions img {
   width: 24px;
   height: 24px;
   cursor: pointer;
-  border-radius: 0;
-  object-fit: contain; 
+  object-fit: contain;
 }
 
 .swiper-navigation-custom {
   position: absolute;
   top: 40%;
-  left: 15%;
-  right: 15%;
+  left: 150px;
+  right: 150px;
   z-index: 10;
   display: flex;
   justify-content: space-between;
   transform: translateY(-50%);
-  padding: 0 10px;
+  padding: 0 20px;
   pointer-events: none;
 }
 
@@ -84,8 +75,8 @@
 }
 
 .swiper-navigation-custom img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   transition: transform 0.2s ease;
 }
 
@@ -93,22 +84,22 @@
   transform: scale(1.1);
 }
 
+
 input.custom-input,
 textarea.custom-input {
   background-color: #fff !important;
-  border-color: #e1e1e1 !important;
+  border: solid 1px #dddbdb!important;
   color: #212529 !important;
 }
 
-hr{
+hr {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   height: 2px;
 }
 
 .btn-like,
 .btn-comment {
-  background-color: #f0f0f0; /* cinza claro */
-  border: none;
+  background-color: #f0f0f0;
   border-radius: 8px;
   padding: 10px 0;
   font-weight: 500;
@@ -117,11 +108,10 @@ hr{
 
 .btn-like:hover,
 .btn-comment:hover {
-  background-color: var(--red-light); 
-  transform: translateY(-2px);
+  background-color: var(--red-light);
+  transform: translateY(-1px);
   cursor: pointer;
 }
-
 
 .btn-comment:focus {
   outline: none;
