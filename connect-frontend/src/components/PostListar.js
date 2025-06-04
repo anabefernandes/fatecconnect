@@ -58,7 +58,7 @@ export default function Forum() {
         const res = await api.get("/monitores");
         const monitoresCompletos = res.data.monitores.map((monitor) => ({
           ...monitor,
-          curso: monitor.curso || { nome: "Curso não informado" },
+          curso: monitor.curso?.nome || { nome: "Curso não informado" },
           foto: monitor.fotoPerfil || "/images/usuario_padrao.png",
         }));
         setMonitores(monitoresCompletos || []);
