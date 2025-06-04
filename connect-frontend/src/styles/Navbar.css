@@ -52,7 +52,7 @@
 .subnavbar-container {
   background-color: var(--white);
   border-bottom: 1px solid #fffbfb;
-  box-shadow: #ccc 0px 1px 2px;
+  box-shadow: #e8e7e7 5px 1px 2px 1px;
 }
 
 .subnavbar-btn {

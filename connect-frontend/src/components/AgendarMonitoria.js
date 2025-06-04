@@ -10,7 +10,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/AgendarMonitoria.css";
 
 registerLocale("pt-BR", ptBR);
-// ... (imports permanecem iguais)
 
 export default function AgendarMonitoria() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -86,7 +85,7 @@ export default function AgendarMonitoria() {
         <div className="row">
           {/* COLUNA ESQUERDA - Monitor e Filtro */}
           <div className="col-md-6 p-5 coluna-esquerda text-white">
-            <h3 className="text-center mb-3">Monitores Disponíveis</h3>
+            <h3 className="text-center mb-4">Monitores Disponíveis</h3>
             <select
               className="form-select mb-5"
               value={monitorId}
