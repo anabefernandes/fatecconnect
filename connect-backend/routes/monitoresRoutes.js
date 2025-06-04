@@ -19,7 +19,7 @@ const router = express.Router();
 router.get("/monitores", async (req, res) => {
   try {
     const monitores = await User.find({ papel: "monitor" }).select(
-      "nome foto curso _id"
+      "nome fotoPerfil curso _id"
     );
     res.json({ monitores });
   } catch (error) {
