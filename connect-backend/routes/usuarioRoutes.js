@@ -6,7 +6,6 @@ const Curso = require("../models/Curso");
 const verificarToken = require("../middlewares/verificarToken");
 const verificarAdmin = require("../middlewares/verificarAdmin");
 const sendEmail = require("../mail");
-
 let resetTokens = {};
 const router = express.Router();
 const multer = require("multer");
@@ -73,25 +72,6 @@ router.post(
     }
   }
 );
-
-router.get("/agendamentos/aluno", verificarToken, async (req, res) => {
-  try {
-    if (req.user.papel !== "aluno") {
-      return res
-        .status(403)
-        .json({ erro: "Acesso permitido apenas para alunos." });
-    }
-
-    const agenda = await Agendamento.find(
-      { aluno: req.user.id },
-      { senha: 0 }
-    ).populate("monitor", "nome");
-
-    return res.status(200).json({ success: true, agenda });
-  } catch (err) {
-    return res.status(500).json({ erro: "Erro ao buscar agendamentos." });
-  }
-});
 
 // cadastro de usuário comum (aluno)
 router.post("/cadastro", async (req, res) => {
@@ -254,7 +234,7 @@ router.post("/login", async (req, res) => {
 
     //token JWT
     const token = jwt.sign(
-      { id: usuario._id, papel: usuario.papel, nomr: usuario.nome },
+      { id: usuario._id, papel: usuario.papel, nome: usuario.nome },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -278,7 +258,7 @@ router.post("/login", async (req, res) => {
         papel: usuario.papel,
         curso: usuario.curso.nome,
         ra: usuario.ra,
-        fotoPerfil: usuario.fotoPerfil,
+        fotoPerfil: usuario.fotoPerfil || "/uploads/usuario_padrao.png",
         biografia: usuario.biografia,
       },
       redirectTo: getDestino(usuario.papel),
