@@ -28,7 +28,9 @@ import Responder from "./components/PostListar";
 import AgendamentosMonitor from "./components/ListarAgendamentosMonitor";
 import AgendamentosAluno from "./components/ListarAgendamentosAluno";
 
-const BACKEND_URL = "http://localhost:5000"; // <--- Mude para a porta do seu backend LOCAL
+const BACKEND_URL = "http://localhost:5000"; //Porta Local, se tiver testando na sua máquina, ative-a
+//const BACKEND_URL = "https://fatecconnect-backend.onrender.com"; 
+// Vou subir com a variável de local ativa, se ela não der certo no deploy (O que eu acho obvio), é por que a certa é a 2º
 
 const LayoutComChat = ({ children, socket }) => {
   const location = useLocation(); 

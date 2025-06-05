@@ -19,7 +19,7 @@ export default function Forum() {
   const [respostas, setRespostas] = useState({});
   const token = localStorage.getItem("token");
   const [monitores, setMonitores] = useState([]);
-  const [usuario, setUsuario] = useState(null);
+  const [,setUsuario] = useState(null);
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [respostasVisiveis, setRespostasVisiveis] = useState({});
 

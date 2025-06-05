@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/User");
 const HorarioDisponivel = require("../models/HorarioDisponivel");
+const Agendamento = require("../models/Agendamento");
 const verificarToken = require("../middlewares/verificarToken");
 const router = express.Router();
 
@@ -22,10 +23,7 @@ router.get("/agendamentos/monitor", verificarToken, async (req, res) => {
         .status(403)
         .json({ erro: "Acesso permitido apenas para monitores." });
     }
-    const agenda = await Agendamento.find(
-      { monitor: req.user.id },
-      { senha: 0 }
-    )
+    const agenda = await Agendamento.find({ monitor: req.user.id })
       .populate("aluno", "nome")
       .populate("monitor", "nome");
 
