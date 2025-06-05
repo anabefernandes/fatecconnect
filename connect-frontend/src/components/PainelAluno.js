@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
 import "../styles/PainelAluno.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -14,7 +13,6 @@ const PainelAluno = () => {
   const navigate = useNavigate();
 
   const [tituloPost, setTituloPost] = useState("");
-  //const [conteudoPost, setConteudoPost] = useState("");
   const postInputRef = useRef(null);
 
   const [loadingPost, setLoadingPost] = useState(false);
@@ -218,7 +216,7 @@ const PainelAluno = () => {
 
     try {
       const { data } = await api.post("/upload-foto", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data", },
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
@@ -376,8 +374,8 @@ const PainelAluno = () => {
                   src={fotoUrl || "/images/usuario_padrao.png"}
                   alt="Foto do autor"
                   style={{
-                    width: "45px",
-                    height: "45px",
+                    width: "65px",
+                    height: "55px",
                     borderRadius: "50%",
                     objectFit: "cover",
                   }}

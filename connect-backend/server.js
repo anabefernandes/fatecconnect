@@ -46,6 +46,7 @@ const io = new Server(server, {
 // Gerenciamento de conexões para o chat
 const monitoresOnline = new Map();
 const usuariosConectados = new Map();
+const salasPrivadas = new Map();
 
 io.on("connection", (socket) => {
   console.log("🔌 Nova conexão Socket.IO:", socket.id);
@@ -60,11 +61,14 @@ io.on("connection", (socket) => {
     );
     socket.userData = userData;
     usuariosConectados.set(socket.id, userData);
-    socket.join("global_chat");
 
     if (userData.papel === "monitor") {
       monitoresOnline.set(socket.id, userData);
       atualizarListaMonitores();
+    } else {
+      // Alunos não entram mais no chat global automaticamente
+      // Eles esperarão para iniciar uma conversa privada com um monitor
+      socket.emit("status_chat", { message: "Aguardando para iniciar um chat privado." });
     }
 
     socket.emit("connection_success", {
@@ -73,10 +77,71 @@ io.on("connection", (socket) => {
     });
   });
 
+  // Novo: Evento para o aluno solicitar um chat com um monitor
+  socket.on("request_private_chat", (monitorId) => {
+    const aluno = usuariosConectados.get(socket.id);
+    const monitor = monitoresOnline.get(monitorId);
+
+    if (!aluno || aluno.papel !== "aluno") {
+      return socket.emit("chat_error", "Apenas alunos podem solicitar chats privados.");
+    }
+    if (!monitor) {
+      return socket.emit("chat_error", "Monitor não encontrado ou offline.");
+    }
+    // Verifica se o monitor já está em uma sala
+    if (salasPrivadas.has(monitorId)) {
+      return socket.emit("chat_error", "Este monitor já está em outra conversa.");
+    }
+
+    // Cria um ID de sala único para a conversa privada
+    const roomId = `private_${monitorId}_${socket.id}`;
+    socket.join(roomId); // Aluno entra na sala
+    io.to(monitorId).emit("private_chat_requested", {
+      studentId: socket.id,
+      studentName: aluno.nome,
+      roomId: roomId,
+    }); // Notifica o monitor
+
+    // Armazena a informação da sala
+    salasPrivadas.set(monitorId, {
+      studentSocketId: socket.id,
+      roomId: roomId,
+      monitorName: monitor.nome,
+      studentName: aluno.nome,
+    });
+
+    console.log(`💬 Chat privado solicitado: Aluno ${aluno.nome} com Monitor ${monitor.nome} na sala ${roomId}`);
+    socket.emit("private_chat_initiated", { roomId: roomId, partnerName: monitor.nome });
+  });
+
+  // Novo: Evento para o monitor aceitar o chat
+  socket.on("accept_private_chat", (data) => {
+    const monitor = usuariosConectados.get(socket.id);
+    if (!monitor || monitor.papel !== "monitor") {
+      return socket.emit("chat_error", "Apenas monitores podem aceitar chats.");
+    }
+
+    const { studentId, roomId } = data;
+    const alunoSocket = io.sockets.sockets.get(studentId);
+
+    if (!alunoSocket) {
+      return socket.emit("chat_error", "Aluno desconectado.");
+    }
+    if (!salasPrivadas.has(socket.id) || salasPrivadas.get(socket.id).roomId !== roomId) {
+      return socket.emit("chat_error", "Requisição de chat inválida.");
+    }
+
+    socket.join(roomId); // Monitor entra na sala
+    io.to(roomId).emit("chat_room_ready", { roomId: roomId });
+    console.log(`✅ Monitor ${monitor.nome} aceitou o chat privado com o aluno ${salasPrivadas.get(socket.id).studentName} na sala ${roomId}`);
+    socket.emit("private_chat_initiated", { roomId: roomId, partnerName: salasPrivadas.get(socket.id).studentName });
+  });
+
+  // Evento send_message ajustado para enviar apenas para a sala privada
   socket.on("send_message", (data) => {
     const sender = usuariosConectados.get(socket.id);
-    if (!sender || !data.message) {
-      return socket.emit("message_error", "Mensagem inválida");
+    if (!sender || !data.message || !data.roomId) {
+      return socket.emit("message_error", "Mensagem inválida ou sala não especificada.");
     }
 
     const messageData = {
@@ -89,27 +154,99 @@ io.on("connection", (socket) => {
       papel: sender.papel,
     };
 
-    console.log(`📩 Mensagem de ${sender.nome}: ${data.message}`);
-    io.to("global_chat").emit("receive_message", messageData);
+    // Verifica se o remetente está na sala especificada
+    if (!socket.rooms.has(data.roomId)) {
+        return socket.emit("message_error", "Você não está nesta sala de chat.");
+    }
+
+    console.log(`📩 Mensagem de ${sender.nome} na sala ${data.roomId}: ${data.message}`);
+    io.to(data.roomId).emit("receive_message", messageData);
   });
+
+  // Novo: Evento para finalizar o chat privado
+  socket.on("end_private_chat", (roomId) => {
+    const sender = usuariosConectados.get(socket.id);
+    if (!sender || !roomId) {
+      return socket.emit("chat_error", "Dados inválidos para finalizar o chat.");
+    }
+
+    // Encontrar o monitor associado a esta sala
+    let monitorIdInRoom = null;
+    for (let [monitorSocketId, chatInfo] of salasPrivadas.entries()) {
+      if (chatInfo.roomId === roomId && (chatInfo.studentSocketId === socket.id || monitorSocketId === socket.id)) {
+        monitorIdInRoom = monitorSocketId;
+        break;
+      }
+    }
+
+    if (monitorIdInRoom) {
+      const chatInfo = salasPrivadas.get(monitorIdInRoom);
+      const studentSocket = io.sockets.sockets.get(chatInfo.studentSocketId);
+      const monitorSocket = io.sockets.sockets.get(monitorIdInRoom);
+
+      if (studentSocket) {
+        studentSocket.leave(roomId);
+        studentSocket.emit("chat_ended", "O chat foi finalizado.");
+      }
+      if (monitorSocket) {
+        monitorSocket.leave(roomId);
+        monitorSocket.emit("chat_ended", "O chat foi finalizado.");
+      }
+      salasPrivadas.delete(monitorIdInRoom); // Remove a sala
+      console.log(`🛑 Chat privado na sala ${roomId} finalizado.`);
+    } else {
+        socket.emit("chat_error", "Sala de chat não encontrada ou você não faz parte dela.");
+    }
+  });
+
 
   socket.on("disconnect", () => {
     console.log("❌ Usuário desconectado:", socket.id);
     if (monitoresOnline.has(socket.id)) {
+      // Se um monitor desconecta, verifica se ele estava em um chat privado
+      if (salasPrivadas.has(socket.id)) {
+        const chatInfo = salasPrivadas.get(socket.id);
+        const studentSocket = io.sockets.sockets.get(chatInfo.studentSocketId);
+        if (studentSocket) {
+          studentSocket.leave(chatInfo.roomId);
+          studentSocket.emit("chat_ended", "O monitor se desconectou. O chat foi finalizado.");
+        }
+        salasPrivadas.delete(socket.id);
+      }
       monitoresOnline.delete(socket.id);
       atualizarListaMonitores();
+    } else {
+      // Se um aluno desconecta, verifica se ele estava em um chat privado
+      let monitorOfThisStudent = null;
+      for (let [monitorSocketId, chatInfo] of salasPrivadas.entries()) {
+        if (chatInfo.studentSocketId === socket.id) {
+          monitorOfThisStudent = monitorSocketId;
+          break;
+        }
+      }
+      if (monitorOfThisStudent) {
+        const chatInfo = salasPrivadas.get(monitorOfThisStudent);
+        const monitorSocket = io.sockets.sockets.get(monitorOfThisStudent);
+        if (monitorSocket) {
+          monitorSocket.leave(chatInfo.roomId);
+          monitorSocket.emit("chat_ended", "O aluno se desconectou. O chat foi finalizado.");
+        }
+        salasPrivadas.delete(monitorOfThisStudent);
+      }
     }
     usuariosConectados.delete(socket.id);
   });
 
   function atualizarListaMonitores() {
-    const lista = Array.from(monitoresOnline.values()).map((monitor) => ({
-      id: monitor._id,
-      nome: monitor.nome,
-      curso: monitor.curso,
-    }));
-    io.to("global_chat").emit("monitores_online", lista);
-  }
+  const lista = Array.from(monitoresOnline.entries()).map(([id, monitor]) => ({
+    id: id,
+    nome: monitor.nome,
+    curso: monitor.curso, // Certifique-se que 'curso' esteja definido se você o usa
+    isAvailable: !salasPrivadas.has(id), // <--- ESSA LINHA É ESSENCIAL E DEVE ESTAR AQUI
+  }));
+  console.log("🚀 Lista de monitores online e disponível:", lista); // Para verificar no console do servidor
+  io.emit("monitores_online", lista);
+}
 });
 
 // Rotas da API

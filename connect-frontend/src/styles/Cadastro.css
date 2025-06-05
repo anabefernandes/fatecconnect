@@ -26,14 +26,14 @@
   margin-bottom: 5px;
 }
 
-input.form-control {
+input.form-control-cadastro {
   background-color: transparent !important;
   border: 2px solid var(--white);
   color: var(--white) !important;
   caret-color: var(--white);
 }
 
-input.form-control:focus {
+input.form-control-cadastro:focus {
   background-color: transparent !important;
   border-color: var(--white);
   box-shadow: none;

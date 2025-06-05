@@ -28,16 +28,22 @@ import Responder from "./components/PostListar";
 import AgendamentosMonitor from "./components/ListarAgendamentosMonitor";
 import AgendamentosAluno from "./components/ListarAgendamentosAluno";
 
+const BACKEND_URL = "http://localhost:5000"; //Porta Local, se tiver testando na sua máquina, ative-a
+//const BACKEND_URL = "https://fatecconnect-backend.onrender.com"; 
+// Vou subir com a variável de local ativa, se ela não der certo no deploy (O que eu acho obvio), é por que a certa é a 2º
+
 const LayoutComChat = ({ children, socket }) => {
-  const location = useLocation();
+  const location = useLocation(); 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // Verifique se user.papel está definido para evitar erroS
   const rotasSemChat = ["/", "/login", "/cadastro"];
+  const shouldShowChat = !rotasSemChat.includes(location.pathname) && user; // Removi o user.papel === 'aluno' para o monitor também ver o chat
 
   return (
     <>
       {children}
-      {!rotasSemChat.includes(location.pathname) && user && (
+      {shouldShowChat && (
         <Chat socket={socket} user={user} />
       )}
     </>
@@ -48,13 +54,24 @@ const App = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("https://fatecconnect-backend.onrender.com");
+    const newSocket = io(BACKEND_URL);
+
+    newSocket.on('connect', () => {
+      console.log('🔗 CLIENTE: Socket.IO conectado! ID:', newSocket.id);
+    });
+    newSocket.on('disconnect', (reason) => {
+      console.warn('💔 CLIENTE: Socket.IO desconectado! Motivo:', reason);
+    });
+    newSocket.on('connect_error', (error) => {
+      console.error('⛔ CLIENTE: Erro de conexão do Socket.IO:', error);
+    });
+
     setSocket(newSocket);
 
     return () => {
       newSocket.close();
     };
-  }, []);
+  }, []); // Array de dependências vazio para rodar apenas uma vez
 
   return (
     <Router>

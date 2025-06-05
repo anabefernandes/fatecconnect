@@ -13,13 +13,13 @@ import Chat from "./chat/Chat";
 export default function Forum() {
   const [titulo, setTitulo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mensagem, setMensagem] = useState(null);
+  const [ setMensagem ] = useState(null);
   const [posts, setPosts] = useState([]);
   const [filtroTitulo] = useState("");
   const [respostas, setRespostas] = useState({});
   const token = localStorage.getItem("token");
   const [monitores, setMonitores] = useState([]);
-  const [usuario, setUsuario] = useState(null);
+  const [,setUsuario] = useState(null);
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [respostasVisiveis, setRespostasVisiveis] = useState({});
 
@@ -257,12 +257,12 @@ export default function Forum() {
             <div className="flex-grow-1">
               <input
                 type="text"
-                className="custom-input form-control"
+                className="custom-input-post form-control"
                 placeholder="No que você está pensando?"
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 disabled={loading}
-                style={{ borderRadius: 20, padding: "20px 20px" }}
+                style={{ borderRadius: 20, padding: "20px 20px"}}
               />
             </div>
 
