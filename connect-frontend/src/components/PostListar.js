@@ -24,6 +24,7 @@ export default function Forum() {
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [respostasVisiveis, setRespostasVisiveis] = useState({});
   const [searchParams] = useSearchParams();
+  
 
   const navigate = useNavigate();
   const usuarioId = JSON.parse(localStorage.getItem("user"))?._id;

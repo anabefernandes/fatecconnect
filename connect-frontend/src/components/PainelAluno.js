@@ -30,8 +30,18 @@ const PainelAluno = () => {
   const [showBioModal, setShowBioModal] = useState(false);
   const [biografia, setBiografia] = useState("");
   const [novaBiografia, setNovaBiografia] = useState("");
+  const [, setCurso] = useState("");
 
   const [meusPosts, setMeusPosts] = useState([]);
+
+  const cursosMap = {
+    "682f97402aa9313e00e689f9": "Desenvolvimento de Software Multiplataforma",
+    "682f97402aa9313e00e689fc": "Análise e Desenvolvimento de Sistemas",
+    "682f97402aa9313e00e689ff": "Comércio Exterior",
+    "682f97402aa9313e00e68a02": "Gestão Empresarial",
+    "682f97402aa9313e00e68a05": "Processos Quimicos",
+    "682f97402aa9313e00e68a08": "Usuario Admin",
+  };
 
   const mostrarMensagemTemporaria = (msg, duracao = 3000) => {
     setMensagemPost(msg);
@@ -91,6 +101,7 @@ const PainelAluno = () => {
         });
         setUsuario(data.usuario);
         setBiografia(data.usuario.biografia || "");
+        setCurso(data.usuario.curso);
         setFotoUrl(
           data.usuario.fotoPerfil
             ? `https://fatecconnect-backend.onrender.com${data.usuario.fotoPerfil}`
@@ -216,7 +227,7 @@ const PainelAluno = () => {
 
     try {
       const { data } = await api.post("/upload-foto", formData, {
-        headers: { "Content-Type": "multipart/form-data", },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
@@ -284,9 +295,20 @@ const PainelAluno = () => {
                     }}
                   />
                 </div>
-                <h5 className="mb-0 fw-bold mt-3">
-                  {usuario?.nome || "Aluno"}
-                </h5>
+                <div>
+                  <h5 className="mb-0 fw-bold mt-3">
+                    {usuario?.nome || "Aluno"}
+                  </h5>
+                  <p className="text-muted mb-2" style={{ fontSize: "1rem" }}>
+                    {usuario?.curso
+                      ? typeof usuario.curso === "object"
+                        ? usuario.curso.nome ||
+                          cursosMap[usuario.curso._id] ||
+                          "Curso desconhecido"
+                        : cursosMap[usuario.curso] || "Curso desconhecido"
+                      : "Curso não informado"}
+                  </p>
+                </div>
               </div>
 
               <div
