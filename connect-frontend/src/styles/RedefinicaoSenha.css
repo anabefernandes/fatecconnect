@@ -42,7 +42,7 @@
   width: 60%;
 }
 
-input.form-control {
+input.form-control-redefinicao {
   background-color: transparent;
   border: 2px solid var(--white);
   color: var(--white) !important;
@@ -50,7 +50,7 @@ input.form-control {
   transition: border-color 0.3s;
 }
 
-input.form-control:focus {
+input.form-control-redefinicao:focus {
   background-color: transparent;
   border-color: var(--white);
   box-shadow: none;

@@ -13,7 +13,6 @@ const PainelAluno = () => {
   const navigate = useNavigate();
 
   const [tituloPost, setTituloPost] = useState("");
-  //const [conteudoPost, setConteudoPost] = useState("");
   const postInputRef = useRef(null);
 
   const [loadingPost, setLoadingPost] = useState(false);
@@ -209,7 +208,7 @@ const PainelAluno = () => {
 
     try {
       const { data } = await api.post("/upload-foto", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data", },
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
@@ -358,8 +357,8 @@ const PainelAluno = () => {
                   src={fotoUrl || "/images/usuario_padrao.png"}
                   alt="Foto do autor"
                   style={{
-                    width: "45px",
-                    height: "45px",
+                    width: "65px",
+                    height: "55px",
                     borderRadius: "50%",
                     objectFit: "cover",
                   }}
@@ -427,7 +426,6 @@ const PainelAluno = () => {
                   >
                     Excluir
                   </button>
-
                 </div>
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-2">

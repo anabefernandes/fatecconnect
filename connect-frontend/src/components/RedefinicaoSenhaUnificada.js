@@ -88,7 +88,8 @@ const RedefinicaoSenhaUnificada = () => {
               <label className="form-label">E-mail Institucional</label>
               <input
                 type="email"
-                className="form-control rounded-3"
+                className="form-control form-control-redefinicao rounded-3"
+                placeholder="@fatec.sp.gov.br"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -107,7 +108,7 @@ const RedefinicaoSenhaUnificada = () => {
               <label className="form-label">Token</label>
               <input
                 type="text"
-                className="form-control rounded-3"
+                className="form-control form-control-redefinicao rounded-3"
                 placeholder="Cole aqui o token"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
@@ -119,7 +120,7 @@ const RedefinicaoSenhaUnificada = () => {
               <label className="form-label">Nova senha</label>
               <input
                 type="password"
-                className="form-control rounded-3"
+                className="form-control form-control-redefinicao rounded-3"
                 placeholder="Nova senha"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
@@ -131,7 +132,7 @@ const RedefinicaoSenhaUnificada = () => {
               <label className="form-label">Confirmar nova senha</label>
               <input
                 type="password"
-                className="form-control rounded-3"
+                className="form-control form-control-redefinicao rounded-3"
                 placeholder="Confirmar senha"
                 value={confirmarSenha}
                 onChange={(e) => setConfirmarSenha(e.target.value)}

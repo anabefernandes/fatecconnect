@@ -4,23 +4,11 @@ const HorarioDisponivel = require("../models/HorarioDisponivel");
 const verificarToken = require("../middlewares/verificarToken");
 const router = express.Router();
 
-// deixando publico a rota de mostrat monitores
-/* router.get("/monitores", async (req, res) => {
-  try {
-    const monitores = await User.find({ papel: "monitor" }, { senha: 0 });
-    return res.status(200).json({ success: true, monitores });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ success: false, error: "Erro ao buscar monitores" });
-  }
-}); */
-
 router.get("/monitores", async (req, res) => {
   try {
-    const monitores = await User.find({ papel: "monitor" }).select(
-      "nome foto curso _id"
-    );
+    const monitores = await User.find({ papel: "monitor" })
+      .select("nome fotoPerfil curso _id")
+      .populate("curso", "nome");
     res.json({ monitores });
   } catch (error) {
     res.status(500).json({ mensagem: "Erro ao buscar monitores" });

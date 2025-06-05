@@ -54,7 +54,7 @@ const Login = () => {
             </label>
             <input
               type="email"
-              className="form-control rounded-3"
+              className="form-control form-control-login rounded-3"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -67,7 +67,7 @@ const Login = () => {
             </label>
             <input
               type="password"
-              className="form-control rounded-3"
+              className="form-control form-control-login rounded-3"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               required

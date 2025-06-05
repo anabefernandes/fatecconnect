@@ -89,7 +89,7 @@ const Cadastro = () => {
             <input
               type="text"
               name="nome"
-              className="form-control rounded-3"
+              className="form-control form-control-cadastro rounded-3"
               value={formData.nome}
               onChange={handleChange}
               required
@@ -100,7 +100,7 @@ const Cadastro = () => {
             <label htmlFor="curso" className="form-label">Curso</label>
             <select
               name="curso"
-              className="form-control rounded-3"
+              className="form-control form-control-cadastro rounded-3"
               value={formData.curso}
               onChange={handleChange}
               required
@@ -121,7 +121,7 @@ const Cadastro = () => {
             <input
               type="text"
               name="ra"
-              className="form-control rounded-3"
+              className="form-control form-control-cadastro rounded-3"
               value={formData.ra}
               onChange={handleChange}
               required
@@ -145,7 +145,7 @@ const Cadastro = () => {
             <input
               type="email"
               name="email"
-              className="form-control rounded-3"
+              className="form-control form-control-cadastro rounded-3"
               value={formData.email}
               onChange={handleChange}
               required
@@ -157,7 +157,7 @@ const Cadastro = () => {
             <input
               type="password"
               name="senha"
-              className="form-control rounded-3"
+              className="form-control form-control-cadastro rounded-3"
               value={formData.senha}
               onChange={handleChange}
               required
@@ -169,7 +169,7 @@ const Cadastro = () => {
             <input
               type="password"
               name="confirmarSenha"
-              className="form-control rounded-3"
+              className="form-control form-control-cadastro rounded-3"
               value={formData.confirmarSenha}
               onChange={handleChange}
               required
