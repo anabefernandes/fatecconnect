@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
 import "../styles/PainelAluno.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -14,7 +13,6 @@ const PainelAluno = () => {
   const navigate = useNavigate();
 
   const [tituloPost, setTituloPost] = useState("");
-  //const [conteudoPost, setConteudoPost] = useState("");
   const postInputRef = useRef(null);
 
   const [loadingPost, setLoadingPost] = useState(false);
@@ -359,8 +357,8 @@ const PainelAluno = () => {
                   src={fotoUrl || "/images/usuario_padrao.png"}
                   alt="Foto do autor"
                   style={{
-                    width: "45px",
-                    height: "45px",
+                    width: "65px",
+                    height: "55px",
                     borderRadius: "50%",
                     objectFit: "cover",
                   }}
@@ -428,7 +426,6 @@ const PainelAluno = () => {
                   >
                     Excluir
                   </button>
-
                 </div>
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-2">

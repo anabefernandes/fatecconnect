@@ -44,22 +44,29 @@
   width: 60%;
 }
 
-input.form-control {
+input.form-control-login {
   background-color: transparent;
   border: 2px solid var(--white);
   color: var(--white) !important;
   caret-color: var(--white);
 }
 
-input.form-control:focus {
-  background-color: transparent;
+input.form-control-login {
+  background-color: transparent !important;
   border-color: var(--white);
   box-shadow: none;
 }
 
-input::placeholder {
+input.form-control-login::placeholder {
+  background-color: transparent!important;
   color: var(--white);
   opacity: 0.7;
+}
+
+input.form-control-login:focus {
+  box-shadow: 0 0 0 0.1rem var(--white) !important;
+  border-color: var(--white) !important;
+  outline: none;
 }
 
 h2.mb-3 {
