@@ -4,9 +4,9 @@ import SubNavbar from "./SubNavbar";
 import "../styles/ListarVagas.css";
 
 function ListarVagas() {
-
   const [vagas, setVagas] = useState([]);
   const [cursoFiltro, setCursoFiltro] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const [form, setForm] = useState({
     titulo: "",
@@ -26,6 +26,45 @@ function ListarVagas() {
   useEffect(() => {
     buscarVagas();
   }, []);
+
+  const handleExcluirVaga = async (vagaId, criadorId) => {
+    if (!user) {
+      alert("Você precisa estar logado para excluir vagas");
+      return;
+    }
+
+    if (user._id !== criadorId) {
+      alert("Você só pode excluir vagas que você criou");
+      return;
+    }
+
+    if (window.confirm("Tem certeza que deseja excluir esta vaga?")) {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `https://fatecconnect-backend.onrender.com/api/vagas/${vagaId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.mensagem || "Erro ao excluir vaga");
+        }
+
+        // Atualiza a lista de vagas após exclusão
+        buscarVagas(cursoFiltro);
+        alert("Vaga excluída com sucesso!");
+      } catch (error) {
+        alert("Erro ao excluir vaga: " + error.message);
+      }
+    }
+  };
 
   const handleFiltro = (e) => {
     const curso = e.target.value;
@@ -56,13 +95,13 @@ function ListarVagas() {
     formData.append("curso", form.curso);
 
     try {
-      const response = await fetch(
-        "https://fatecconnect-backend.onrender.com/api/cadastrovagas",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("https://fatecconnect-backend.onrender.com/api/cadastrovagas", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      });
 
       if (!response.ok) {
         const data = await response.json();
@@ -172,7 +211,11 @@ function ListarVagas() {
                 rows="3"
                 onChange={handleChange}
                 required
-                style={{ borderRadius: 20, padding: "12px 15px", resize: "none" }}
+                style={{
+                  borderRadius: 20,
+                  padding: "12px 15px",
+                  resize: "none",
+                }}
               ></textarea>
             </div>
             <div
@@ -180,7 +223,7 @@ function ListarVagas() {
                 gridColumn: "6 / 7",
                 display: "flex",
                 justifyContent: "flex-end",
-                alignItems: "flex-end", 
+                alignItems: "flex-end",
               }}
             >
               <button
@@ -209,7 +252,6 @@ function ListarVagas() {
           </div>
         </form>
 
-
         {/* Seção de vagas */}
         <hr className="my-5" />
 
@@ -231,7 +273,30 @@ function ListarVagas() {
 
           {vagas.map((vaga) => (
             <div key={vaga._id} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100 shadow-sm">
+              <div className="card h-100 shadow-sm position-relative">
+                {user?._id === vaga.criador?._id && (
+                  <button
+                    onClick={() =>
+                      handleExcluirVaga(vaga._id, vaga.criador._id)
+                    }
+                    className="btn btn-sm btn-danger position-absolute"
+                    title="Excluir vaga"
+                    style={{
+                      top: "10px",
+                      right: "10px",
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 0,
+                      fontSize: "18px",
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
                 <img
                   src={`https://fatecconnect-backend.onrender.com/uploads/${vaga.imagem}`}
                   alt={vaga.titulo}
@@ -244,6 +309,11 @@ function ListarVagas() {
                   <p className="text-muted mb-0">
                     <strong>Curso:</strong> {vaga.curso}
                   </p>
+                  {vaga.criador && (
+                    <small className="text-muted mt-2">
+                      Postado por: {vaga.criador.nome}
+                    </small>
+                  )}
                 </div>
               </div>
             </div>

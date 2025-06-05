@@ -42,7 +42,6 @@ const PainelAluno = () => {
     }, duracao);
   };
 
-
   const editarPost = (postId) => {
     const postSelecionado = meusPosts.find((p) => p._id === postId);
     if (postSelecionado) {
@@ -50,7 +49,10 @@ const PainelAluno = () => {
       setPostEditandoId(postId);
       setEditando(true);
 
-      postInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      postInputRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   };
 
@@ -61,7 +63,9 @@ const PainelAluno = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 
-        setMeusPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+        setMeusPosts((prevPosts) =>
+          prevPosts.filter((post) => post._id !== postId)
+        );
         alert("Post excluído com sucesso!");
       } catch (error) {
         console.error("Erro ao excluir post:", error);
@@ -124,10 +128,13 @@ const PainelAluno = () => {
 
     try {
       if (editando) {
-        await api.put(`/posts/${postEditandoId}`,
+        await api.put(
+          `/posts/${postEditandoId}`,
           { titulo: tituloPost },
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
         mostrarMensagemTemporaria("Post editado com sucesso!");
@@ -136,7 +143,9 @@ const PainelAluno = () => {
           "/postar",
           { titulo: tituloPost },
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
         mostrarMensagemTemporaria("Post criado com sucesso!");
@@ -157,7 +166,6 @@ const PainelAluno = () => {
       setLoadingPost(false);
     }
   };
-
 
   const handleSalvarBiografia = async () => {
     if (!novaBiografia.trim()) {
@@ -278,16 +286,20 @@ const PainelAluno = () => {
                     }}
                   />
                 </div>
-                <h5 className="mb-0 fw-bold mt-3">{usuario?.nome || "Aluno"}</h5>
+                <h5 className="mb-0 fw-bold mt-3">
+                  {usuario?.nome || "Aluno"}
+                </h5>
               </div>
 
-              <div className="mt-4 mb-4 p-3 rounded"
+              <div
+                className="mt-4 mb-4 p-3 rounded"
                 style={{
                   backgroundColor: "#f0f0f0",
                   maxHeight: "350px",
                   height: "300px",
                   position: "relative",
-                }}>
+                }}
+              >
                 <div className="mb-3" style={{ position: "relative" }}>
                   <h5 className="text-center mb-0">Biografia</h5>
                   <img
@@ -308,10 +320,15 @@ const PainelAluno = () => {
                     title="Editar biografia"
                   />
                 </div>
-                <p style={{ whiteSpace: 'pre-wrap', fontSize: "1.05rem" }}>
-                  {biografia || "Nenhuma biografia cadastrada."}</p>
+                <p style={{ whiteSpace: "pre-wrap", fontSize: "1.05rem" }}>
+                  {biografia || "Nenhuma biografia cadastrada."}
+                </p>
               </div>
-              <ListarAgendamentosAluno limite={3} comNavs={false} mostrarCancelados={false} />
+              <ListarAgendamentosAluno
+                limite={3}
+                comNavs={false}
+                mostrarCancelados={false}
+              />
             </div>
           </div>
 
@@ -385,10 +402,14 @@ const PainelAluno = () => {
                     height: 36,
                     cursor: loadingPost ? "not-allowed" : "pointer",
                     opacity: loadingPost ? 0.5 : 1,
-                    transition: "transform 0.2s ease-in-out"
+                    transition: "transform 0.2s ease-in-out",
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1.0)"}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.2)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.0)")
+                  }
                 />
               </div>
               {mensagemPost && (
@@ -396,16 +417,18 @@ const PainelAluno = () => {
               )}
             </div>
 
-
             {meusPosts.map((post) => (
               <div
                 key={post._id}
                 className="card mb-3 shadow-sm position-relative"
                 style={{ borderLeft: "4px solid var(--red-dead)" }}
               >
-                <div className="position-absolute"
+                <div
+                  className="position-absolute"
                   style={{
-                    top: "10px", right: "10px", zIndex: 1
+                    top: "10px",
+                    right: "10px",
+                    zIndex: 1,
                   }}
                 >
                   <button
@@ -428,7 +451,6 @@ const PainelAluno = () => {
                   >
                     Excluir
                   </button>
-
                 </div>
                 <div className="card-body">
                   <div className="d-flex align-items-center mb-2">
@@ -448,7 +470,10 @@ const PainelAluno = () => {
                     </strong>
                   </div>
 
-                  <p className="card-text text-dark" style={{ whiteSpace: "pre-wrap" }}>
+                  <p
+                    className="card-text text-dark"
+                    style={{ whiteSpace: "pre-wrap" }}
+                  >
                     {post.titulo.length > 150
                       ? post.titulo.substring(0, 150) + "..."
                       : post.titulo}
@@ -472,114 +497,121 @@ const PainelAluno = () => {
             ))}
           </div>
         </div>
-      </div >
+      </div>
 
       {/* MODAL DE UPLOAD DE FOTO */}
-      {
-        showModal && (
-          <div
-            className="modal fade show d-block"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Enviar Foto de Perfil</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setShowModal(false)}
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
+      {showModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Enviar Foto de Perfil</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="img-fluid mt-3 rounded"
                   />
-                  {preview && (
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="img-fluid mt-3 rounded"
-                    />
-                  )}
-                </div>
-                <div className="modal-footer">
-                  <button
-                    className="btn"
-                    style={{
-                      backgroundColor: "var(--red-light)",
-                      color: "#fff"
-                    }}
-                    onClick={() => setShowModal(false)}
-                  > Cancelar
-                  </button>
-                  <button className="btn"
-                    style={{
-                      backgroundColor: "var(--red-dark)",
-                      color: "#fff"
-                    }} onClick={handleUpload}>
-                    Enviar
-                  </button>
-                </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "var(--red-light)",
+                    color: "#fff",
+                  }}
+                  onClick={() => setShowModal(false)}
+                >
+                  {" "}
+                  Cancelar
+                </button>
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "var(--red-dark)",
+                    color: "#fff",
+                  }}
+                  onClick={handleUpload}
+                >
+                  Enviar
+                </button>
               </div>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
 
       {/* MODAL DE BIOGRAFIA */}
-      {
-        showBioModal && (
-          <div
-            className="modal fade show d-block"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Editar Biografia</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setShowBioModal(false)}
-                  ></button>
-                </div>
+      {showBioModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Editar Biografia</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowBioModal(false)}
+                ></button>
+              </div>
 
-                <div className="modal-body">
-                  <textarea
-                    className="form-control"
-                    style={{
-                      height: '100px',
-                      resize: 'none'
-                    }}
-                    value={novaBiografia}
-                    onChange={(e) => setNovaBiografia(e.target.value)}
-                    maxLength={500}
-                  />
-                  <small className="text-muted">{novaBiografia.length}/ 500 caracteres</small>
-                </div>
+              <div className="modal-body">
+                <textarea
+                  className="form-control"
+                  style={{
+                    height: "100px",
+                    resize: "none",
+                  }}
+                  value={novaBiografia}
+                  onChange={(e) => setNovaBiografia(e.target.value)}
+                  maxLength={500}
+                />
+                <small className="text-muted">
+                  {novaBiografia.length}/ 500 caracteres
+                </small>
+              </div>
 
-                <div className="modal-footer">
-                  <button
-                    className="btn"
-                    style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
-                    onClick={() => setShowBioModal(false)}
-                  > Cancelar
-                  </button>
-                  <button
-                    className="btn"
-                    style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
-                    onClick={handleSalvarBiografia}
-                  > Salvar
-                  </button>
-                </div>
+              <div className="modal-footer">
+                <button
+                  className="btn"
+                  style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
+                  onClick={() => setShowBioModal(false)}
+                >
+                  {" "}
+                  Cancelar
+                </button>
+                <button
+                  className="btn"
+                  style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
+                  onClick={handleSalvarBiografia}
+                >
+                  {" "}
+                  Salvar
+                </button>
               </div>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
     </>
   );
 };
