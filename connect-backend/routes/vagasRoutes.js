@@ -67,7 +67,10 @@ router.delete("/vagas/:id", verificarToken, async (req, res) => {
     if (!vaga) {
       return res.status(404).json({ mensagem: "Vaga não encontrada." });
     }
-    if (vaga.criador.toString() !== req.user.id) {
+    if (
+      vaga.criador.toString() !== req.user.id &&
+      req.user.papel !== "monitor"
+    ) {
       return res
         .status(403)
         .json({ mensagem: "Você não tem permissão para excluir esta vaga." });

@@ -20,11 +20,10 @@ export default function Forum() {
   const [respostas, setRespostas] = useState({});
   const token = localStorage.getItem("token");
   const [monitores, setMonitores] = useState([]);
-  const [, setUsuario] = useState(null);
+  const [usuario, setUsuario] = useState(null);
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [respostasVisiveis, setRespostasVisiveis] = useState({});
   const [searchParams] = useSearchParams();
-  
 
   const navigate = useNavigate();
   const usuarioId = JSON.parse(localStorage.getItem("user"))?._id;
@@ -77,6 +76,23 @@ export default function Forum() {
 
     fetchMonitores();
   }, []);
+
+  const deletarPost = async (postId) => {
+    const confirmacao = window.confirm(
+      "Tem certeza que deseja deletar este post?"
+    );
+    if (!confirmacao) return;
+
+    try {
+      await api.delete(`/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      buscarPosts();
+    } catch (err) {
+      console.error("Erro ao deletar post:", err);
+      alert("Erro ao deletar o post.");
+    }
+  };
 
   const buscarPosts = useCallback(async () => {
     try {
@@ -322,6 +338,20 @@ export default function Forum() {
                       >
                         {post.autor?.nome || "Desconhecido"}
                       </span>
+                      {usuario?.tipo === "monitor" && (
+                        <button
+                          onClick={() => deletarPost(post._id)}
+                          className="btn btn-sm btn-danger ms-auto"
+                          style={{
+                            marginLeft: "auto",
+                            fontSize: "0.9rem",
+                            padding: "2px 8px",
+                            borderRadius: "6px",
+                          }}
+                        >
+                          ❌
+                        </button>
+                      )}
                     </div>
 
                     {/* Conteúdo do post */}
