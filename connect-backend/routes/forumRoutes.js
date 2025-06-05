@@ -34,11 +34,11 @@ router.post("/postar", verificarToken, async (req, res) => {
 //Listar Posts
 router.get("/posts", async (req, res) => {
   try {
-    const { titulo } = req.query;
+    const { titulo, busca } = req.query;
     const filtro = {};
 
-    if (titulo) {
-      filtro.titulo = new RegExp(titulo, "i");
+    if (titulo || busca) {
+      filtro.titulo = new RegExp(titulo || busca, "i");
     }
 
     const posts = await Forum.find(filtro)

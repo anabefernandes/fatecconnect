@@ -9,19 +9,21 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import Chat from "./chat/Chat";
+import { useSearchParams } from "react-router-dom";
 
 export default function Forum() {
   const [titulo, setTitulo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [ setMensagem ] = useState(null);
+  const [, setMensagem] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [filtroTitulo] = useState("");
+  const [filtroTitulo, setFiltroTitulo] = useState("");
   const [respostas, setRespostas] = useState({});
   const token = localStorage.getItem("token");
   const [monitores, setMonitores] = useState([]);
-  const [,setUsuario] = useState(null);
+  const [, setUsuario] = useState(null);
   const [fotoPerfil, setFotoPerfil] = useState(null);
   const [respostasVisiveis, setRespostasVisiveis] = useState({});
+  const [searchParams] = useSearchParams();
 
   const navigate = useNavigate();
   const usuarioId = JSON.parse(localStorage.getItem("user"))?._id;
@@ -51,6 +53,11 @@ export default function Forum() {
   const usuarioCurtiu = (post) => {
     return post.likes?.includes(usuarioId);
   };
+
+  useEffect(() => {
+    const termo = searchParams.get("termo") || "";
+    setFiltroTitulo(termo);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchMonitores = async () => {
@@ -152,10 +159,6 @@ export default function Forum() {
       console.error("Erro ao curtir post:", err);
     }
   };
-
-  useEffect(() => {
-    buscarPosts();
-  }, [buscarPosts]);
 
   return (
     <div>
@@ -262,7 +265,7 @@ export default function Forum() {
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 disabled={loading}
-                style={{ borderRadius: 20, padding: "20px 20px"}}
+                style={{ borderRadius: 20, padding: "20px 20px" }}
               />
             </div>
 
