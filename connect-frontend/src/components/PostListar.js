@@ -35,6 +35,7 @@ export default function Forum() {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsuario(data.usuario);
+        console.log("Usuário logado:", data.usuario);
         setFotoPerfil(
           data.usuario.fotoPerfil
             ? `https://fatecconnect-backend.onrender.com${data.usuario.fotoPerfil}`
@@ -316,7 +317,11 @@ export default function Forum() {
               const mostrarRespostas = respostasVisiveis[post._id];
 
               return (
-                <div key={post._id} className="card mb-4 shadow-sm">
+                <div
+                  key={post._id}
+                  className="card mb-4 shadow-sm"
+                  style={{ position: "relative" }}
+                >
                   <div className="card-body">
                     {/* Header com imagem + nome */}
                     <div className="d-flex align-items-center mb-3">
@@ -338,18 +343,20 @@ export default function Forum() {
                       >
                         {post.autor?.nome || "Desconhecido"}
                       </span>
-                      {usuario?.tipo === "monitor" && (
+                      {usuario?.papel === "monitor" && (
                         <button
                           onClick={() => deletarPost(post._id)}
-                          className="btn btn-sm btn-danger ms-auto"
+                          className="btn btn-sm btn-danger"
                           style={{
-                            marginLeft: "auto",
+                            position: "absolute",
+                            top: "10px",
+                            right: "10px",
                             fontSize: "0.9rem",
                             padding: "2px 8px",
                             borderRadius: "6px",
                           }}
                         >
-                          ❌
+                          Excluir
                         </button>
                       )}
                     </div>
