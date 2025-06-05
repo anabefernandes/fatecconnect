@@ -262,8 +262,11 @@ export default function Chat({ socket, user }) {
           <div className={style['chat-header']}>
             {currentChatRoomId ? (
               <>
-                <span>Conversando com: <strong>{chatPartnerName}</strong></span>
-                <IconButton onClick={endCurrentChat} size="small" style={{ marginLeft: 'auto' }}>
+                <span>
+                  <span className={style['online-indicator']}></span>
+                  <strong>{chatPartnerName}</strong>
+                </span>
+                <IconButton onClick={endCurrentChat} size="small" style={{ marginLeft: 'auto', color: 'white' }}>
                   <CloseIcon />
                 </IconButton>
               </>
@@ -307,16 +310,40 @@ export default function Chat({ socket, user }) {
                             variant="outlined"
                             onClick={() => requestChatWithMonitor(monitor.id)}
                             disabled={selectedMonitorId === monitor.id} // Desabilita o botão se já estiver solicitando
-                            style={{ marginBottom: '5px' }}
+                            style={{
+                              marginBottom: '5px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'flex-start',
+                              gap: '8px',
+                              backgroundColor: '#fdf0f0', // cor de fundo suave
+                              color: 'var(--red-dark)',
+                              borderColor: 'var(--red-dark)',
+                              fontWeight: 'bold'
+                            }}
                           >
-                            {monitor.nome} ({monitor.curso}) {selectedMonitorId === monitor.id && '(Solicitando...)'}
+                            <span className={style['online-indicator']}></span>
+                            <span>
+                              {monitor.nome}
+                              {monitor.curso ? ` (${monitor.curso})` : ''}
+                              {selectedMonitorId === monitor.id && ' (Solicitando...)'}
+                            </span>
                           </Button>
                         </ListItem>
                       ))}
                     </List>
                   </div>
                 ) : (
-                  <p>Nenhum monitor disponível no momento. Tente novamente mais tarde.</p>
+                  <p style={{
+                    color: '#999',
+                    fontStyle: 'italic',
+                    textAlign: 'center',
+                    marginTop: '20px',
+                    fontSize: '1rem'
+                  }}>
+                    Nenhum monitor está disponível agora.
+                    Tente novamente em mais tarde! 🙁
+                  </p>
                 )
               ) : (
                 // Monitor: lista de chats ativos
@@ -330,7 +357,9 @@ export default function Chat({ socket, user }) {
                             fullWidth
                             variant={currentChatRoomId === roomId ? "contained" : "outlined"}
                             onClick={() => selectActiveChat(roomId, chatInfo.studentName)}
-                            style={{ marginBottom: '5px' }}
+                            style={{
+                              marginBottom: '5px',
+                            }}
                           >
                             {chatInfo.studentName}
                           </Button>
@@ -339,7 +368,16 @@ export default function Chat({ socket, user }) {
                     </List>
                   </div>
                 ) : (
-                  <p>Nenhum chat privado ativo no momento. Aguardando solicitações...</p>
+                  <p style={{
+                    color: '#999',
+                    fontStyle: 'italic',
+                    textAlign: 'center',
+                    marginTop: '20px',
+                    fontSize: '1rem',
+                    userSelect: 'none'
+                  }}>
+                    💬 Nenhum chat privado ativo no momento. Aguardando solicitações...
+                  </p>
                 )
               )
             )}
@@ -385,8 +423,8 @@ export default function Chat({ socket, user }) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={rejectChatRequest}>Rejeitar</Button>
-          <Button onClick={acceptChatRequest} autoFocus>Aceitar</Button>
+          <Button onClick={rejectChatRequest} className={style['reject-button']}>Rejeitar</Button>
+          <Button onClick={acceptChatRequest} autoFocus className={style['accept-button']}>Aceitar</Button>
         </DialogActions>
       </Dialog>
     </div>

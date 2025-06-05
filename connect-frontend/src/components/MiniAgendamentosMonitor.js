@@ -46,32 +46,33 @@ export default function MiniAgendamentosMonitor() {
                 <ul className="list-group">
                     {agendamentos.map((ag) => (
                         <li key={ag._id} className="list-group-item d-flex justify-content-between align-items-center">
-                            <span style={{ fontSize: "0.95rem" }}>
-                                {new Date(ag.data).toLocaleString("pt-BR")}
-                            </span>
+                            <div style={{ fontSize: "0.95rem" }}>
+                                <div><strong>Nome do Aluno:</strong> {ag.aluno?.nome || "Aluno desconhecido"}</div>
+                                <div><strong>Data e Hora: </strong>{new Date(ag.data).toLocaleString("pt-BR")}</div>
+                            </div>
                             <span className="badge bg-warning text-dark">{ag.status}</span>
                         </li>
                     ))}
                 </ul>
             )}
-                <div className="text-center mt-3">
-                    <Link to="/agendamentos/monitor"
-                        className="btn"
-                        style={{
-                            border: "2px solid var(--red-dark)",
-                            color: "var(--red-dead)",
-                            backgroundColor: "transparent",
-                        }} onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = "var(--red-light)";
-                            e.target.style.color = "#fff";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = "transparent";
-                            e.target.style.color = "var(--red-dark)";
-                        }}
-                    >
-                        Ver todos
-                    </Link>
+            <div className="text-center mt-3">
+                <Link to="/agendamentos/monitor"
+                    className="btn"
+                    style={{
+                        border: "2px solid var(--red-dark)",
+                        color: "var(--red-dead)",
+                        backgroundColor: "transparent",
+                    }} onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = "var(--red-light)";
+                        e.target.style.color = "#fff";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "var(--red-dark)";
+                    }}
+                >
+                    Ver todos
+                </Link>
             </div>
         </div>
     );
