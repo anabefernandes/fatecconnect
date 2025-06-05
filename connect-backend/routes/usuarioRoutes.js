@@ -424,7 +424,7 @@ router.get("/cursos", async (req, res) => {
 });
 
 //retorna dados do perfil para o usuario
-router.get("/perfil", async (req, res) => {
+router.get("/perfil", verificarToken, async (req, res) => {
   try {
     const usuario = await User.findById(req.user.id)
       .select("nome fotoPerfil curso _id papel biografia")
