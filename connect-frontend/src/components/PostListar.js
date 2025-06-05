@@ -137,67 +137,67 @@ export default function Forum() {
       <div className="max-w-4xl mx-auto p-6 space-y-12">
         {/* Monitores disponíveis */}
         <section className="relative">
-  <h3 className="text-2xl font-semibold mb-4 text-center">Conheça nossos Monitores</h3>
+          <h3 className="text-2xl font-semibold mb-4 text-center">Conheça nossos Monitores</h3>
 
-  <div className="swiper-navigation-custom">
-    <button className="swiper-button-prev-custom">
-      <img src="/images/seta-direita.png" alt="Anterior" />
-    </button>
-    <button className="swiper-button-next-custom">
-      <img src="/images/seta-esquerda.png" alt="Próximo" />
-    </button>
-  </div>
-
-  {monitores.length === 0 ? (
-    <p className="text-center text-gray-500">Nenhum monitor encontrado.</p>
-  ) : (
-    <Swiper
-      modules={[Navigation]}
-      spaceBetween={20}
-      slidesPerView="auto"
-      centeredSlides={true}
-      loop={monitores.length >= 3}
-      navigation={{
-        nextEl: ".swiper-button-next-custom",
-        prevEl: ".swiper-button-prev-custom",
-      }}
-      className="mySwiper"
-    >
-      {monitores.map((monitor) => (
-        <SwiperSlide key={monitor._id}>
-          <div className="card-monitor">
-            <img
-              src={
-                monitor.foto
-                  ? `https://fatecconnect-backend.onrender.com${monitor.foto}`
-                  : "/images/usuario-padrao.png"
-              }
-              alt={monitor.nome}
-            />
-            <div className="monitor-info">
-              <h5 className="fw-semibold">{monitor.nome}</h5>
-              <p className="text-muted mb-2">{monitor.curso?.nome || "Curso não informado"}</p>
-            </div>
-            <div className="icon-actions">
-              <img
-                src="/images/chat-monitor.png"
-                alt="Chat"
-                title="Conversar"
-                onClick={() => navigate(`/chat/${monitor._id}`)}
-              />
-              <img
-                src="/images/agenda-monitor.png"
-                alt="Agendar"
-                title="Agendar"
-                onClick={() => navigate(`/agendar-monitoria/${monitor._id}`)}
-              />
-            </div>
+          <div className="swiper-navigation-custom">
+            <button className="swiper-button-prev-custom">
+              <img src="/images/seta-direita.png" alt="Anterior" />
+            </button>
+            <button className="swiper-button-next-custom">
+              <img src="/images/seta-esquerda.png" alt="Próximo" />
+            </button>
           </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  )}
-</section>
+
+          {monitores.length === 0 ? (
+            <p className="text-center text-gray-500">Nenhum monitor encontrado.</p>
+          ) : (
+            <Swiper
+              modules={[Navigation]}
+              spaceBetween={20}
+              slidesPerView="auto"
+              centeredSlides={true}
+              loop={monitores.length >= 3}
+              navigation={{
+                nextEl: ".swiper-button-next-custom",
+                prevEl: ".swiper-button-prev-custom",
+              }}
+              className="mySwiper"
+            >
+              {monitores.map((monitor) => (
+                <SwiperSlide key={monitor._id}>
+                  <div className="card-monitor">
+                    <img
+                      src={
+                        monitor.foto
+                          ? `https://fatecconnect-backend.onrender.com${monitor.foto}`
+                          : "/images/usuario-padrao.png"
+                      }
+                      alt={monitor.nome}
+                    />
+                    <div className="monitor-info">
+                      <h5 className="fw-semibold">{monitor.nome}</h5>
+                      <p className="text-muted mb-2">{monitor.curso?.nome || "Curso não informado"}</p>
+                    </div>
+                    <div className="icon-actions">
+                      <img
+                        src="/images/chat-monitor.png"
+                        alt="Chat"
+                        title="Conversar"
+                        onClick={() => navigate(`/chat/${monitor._id}`)}
+                      />
+                      <img
+                        src="/images/agenda-monitor.png"
+                        alt="Agendar"
+                        title="Agendar"
+                        onClick={() => navigate(`/agendar-monitoria/${monitor._id}`)}
+                      />
+                    </div>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+        </section>
 
 
         <Chat />
@@ -262,7 +262,11 @@ export default function Forum() {
                     {/* Header com imagem + nome */}
                     <div className="d-flex align-items-center mb-3">
                       <img
-                        src={fotoUrl || "/images/usuario_padrao.png"}
+                        src={
+                          post.autor?.foto
+                            ? `https://fatecconnect-backend.onrender.com${post.autor.foto}`
+                            : "/images/usuario_padrao.png"
+                        }
                         alt="Foto do autor"
                         style={{
                           width: "45px",
@@ -293,14 +297,14 @@ export default function Forum() {
                       <button
                         onClick={() => curtirPost(post._id)}
                         className={`btn btn-like flex-fill ${usuarioCurtiu(post) ? "curtido" : ""}`}
-                        style={{ maxWidth: "500px", border:'1px solid rgb(200, 197, 197)', boxShadow: '0 0 5px rgba(0,0,0,0.1)' }}
+                        style={{ maxWidth: "500px", border: '1px solid rgb(200, 197, 197)', boxShadow: '0 0 5px rgba(0,0,0,0.1)' }}
                       >
                         ❤️ Curtir
                       </button>
 
                       <button
                         className="btn btn-comment flex-fill"
-                        style={{ maxWidth: "500px", border:'1px solid rgb(200, 197, 197)', boxShadow: '0 0 5px rgba(0,0,0,0.1)' }}
+                        style={{ maxWidth: "500px", border: '1px solid rgb(200, 197, 197)', boxShadow: '0 0 5px rgba(0,0,0,0.1)' }}
                         onClick={() =>
                           setRespostasVisiveis((prev) => ({
                             ...prev,

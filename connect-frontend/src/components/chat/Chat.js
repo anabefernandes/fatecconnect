@@ -21,7 +21,7 @@ export default function Chat({ socket, user }) {
       papel: user.papel,
     });
 
-    const audioNotification = new Audio('/sounds/notificacao.mp3');
+    const audioNotification = new Audio('/sounds/notificacaoChat.mp3');
 
     const handleReceiveMessage = (data) => {
       setMessageList((current) => [...current, data]);

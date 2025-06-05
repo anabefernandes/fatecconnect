@@ -209,7 +209,7 @@ const PainelAluno = () => {
 
     try {
       const { data } = await api.post("/upload-foto", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data", },
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
