@@ -15,7 +15,7 @@ const ForumSchema = new mongoose.Schema({
   },
   dataCriacao: { type: Date, default: Date.now },
   respostas: [respostaSchema],
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }); 
 
 module.exports = mongoose.model('Forum', ForumSchema);
