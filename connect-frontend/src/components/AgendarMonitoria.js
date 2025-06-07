@@ -41,11 +41,13 @@ export default function AgendarMonitoria() {
     }
 
     try {
-      const res = await api.post("/agendar-monitoria", {
+      await api.post("/agendar-monitoria", {
         alunoId,
         monitorId,
         data: new Date(data),
       });
+      alert("Agendamento realizado com sucesso!");
+      window.location.reload();
     } catch (err) {
       alert(
         "Erro ao agendar: " +

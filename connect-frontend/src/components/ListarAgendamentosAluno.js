@@ -6,10 +6,14 @@ import NavBar from "./Navbar";
 import SubNavBar from "./SubNavbar";
 import MiniAgendamentos from "./MiniAgendamentos";
 
-export default function ListarAgendamentosAluno({ limite, comNavs = true, mostrarCancelados = false }) {
+export default function ListarAgendamentosAluno({
+  limite,
+  comNavs = true,
+  mostrarCancelados = false,
+}) {
   const [agendamentos, setAgendamentos] = useState([]);
   const [erro, setErro] = useState(null);
-  const [mensagem, setMensagem] = useState(null);
+  const [, setMensagem] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -63,25 +67,25 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true, mostra
   }, [token]);
 
   const cancelarAgendamento = async (id) => {
+    const confirmar = window.confirm(
+      "Tem certeza que deseja cancelar este agendamento?"
+    );
+    if (!confirmar) return;
+
     try {
-      const response = await axios.patch(
-        `https://fatecconnect-backend.onrender.com/api/agendamentos/${id}/status`,
-        { status: "cancelado" },
+      const response = await axios.delete(
+        `https://fatecconnect-backend.onrender.com/api/agendamentos/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data.success) {
-        setAgendamentos((prev) =>
-          prev.map((ag) =>
-            ag._id === id ? { ...ag, status: "cancelado" } : ag
-          )
-        );
-        setMensagem("Agendamento cancelado com sucesso!");
+        setAgendamentos((prev) => prev.filter((ag) => ag._id !== id));
+        setMensagem("Agendamento cancelado e excluído com sucesso!");
         setErro(null);
       }
     } catch (err) {
-      console.error("Erro ao cancelar agendamento:", err);
-      setErro(err.response?.data?.erro || "Erro ao cancelar agendamento.");
+      console.error("Erro ao excluir agendamento:", err);
+      setErro(err.response?.data?.erro || "Erro ao excluir agendamento.");
     }
   };
 
@@ -100,13 +104,11 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true, mostra
 
       <div className="container mt-4">
         <h2 className="mb-4">
-          {limite
-            ? `Agendamentos Recentes`
-            : "Meus agendamentos"}
+          {limite ? `Agendamentos Recentes` : "Meus agendamentos"}
         </h2>
 
         {erro && <div className="alert alert-danger">{erro}</div>}
-        
+
         <MiniAgendamentos
           agendamentos={agendamentosExibidos}
           cancelarAgendamento={cancelarAgendamento}
@@ -114,13 +116,15 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true, mostra
 
         {limite && agendamentos.length > limite && (
           <div className="text-center mt-3">
-            <Link to="/agendamentos/aluno"
+            <Link
+              to="/agendamentos/aluno"
               className="btn"
               style={{
                 border: "2px solid var(--red-dark)",
                 color: "var(--red-dead)",
                 backgroundColor: "transparent",
-              }} onMouseEnter={(e) => {
+              }}
+              onMouseEnter={(e) => {
                 e.target.style.backgroundColor = "var(--red-light)";
                 e.target.style.color = "#fff";
               }}

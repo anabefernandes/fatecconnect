@@ -47,12 +47,10 @@ router.post("/agendar-monitoria", async (req, res) => {
       status: "pendente",
     });
 
-    res
-      .status(201)
-      .json({
-        mensagem: "Agendamento criado com sucesso",
-        agendamento: novoAgendamento,
-      });
+    res.status(201).json({
+      mensagem: "Agendamento criado com sucesso",
+      agendamento: novoAgendamento,
+    });
   } catch (err) {
     console.error("Erro no agendamento:", err);
     res
@@ -61,23 +59,35 @@ router.post("/agendar-monitoria", async (req, res) => {
   }
 });
 
-router.patch("/agendamentos/:id/status", verificarToken, async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-
+router.delete("/agendamentos/:id", verificarToken, async (req, res) => {
   try {
+    const { id } = req.params;
+
+    // Verifica se é um ID válido
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ erro: "ID inválido" });
+    }
+
     const agendamento = await Agendamento.findById(id);
     if (!agendamento) {
       return res.status(404).json({ erro: "Agendamento não encontrado" });
     }
 
-    agendamento.status = status;
-    await agendamento.save();
+    // Verifica se o usuário tem permissão (opcional)
+    if (
+      req.user.papel === "aluno" &&
+      agendamento.aluno.toString() !== req.user.id
+    ) {
+      return res.status(403).json({ erro: "Permissão negada" });
+    }
 
-    return res.status(200).json({ success: true, agendamento });
+    await Agendamento.findByIdAndDelete(id);
+    return res
+      .status(200)
+      .json({ success: true, mensagem: "Agendamento excluído" });
   } catch (err) {
-    console.error("Erro ao atualizar status:", err); // <- aqui
-    return res.status(500).json({ erro: "Erro ao atualizar status" });
+    console.error("Erro ao excluir agendamento:", err);
+    return res.status(500).json({ erro: "Erro ao excluir agendamento" });
   }
 });
 

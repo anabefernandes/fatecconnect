@@ -7,7 +7,7 @@ import SubNavbar from "./SubNavbar";
 export default function ListarAgendamentosMonitor() {
   const [agendamentos, setAgendamentos] = useState([]);
   const [erro, setErro] = useState(null);
-  const [mensagem, setMensagem] = useState(null);
+  const [, setMensagem] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -72,9 +72,6 @@ export default function ListarAgendamentosMonitor() {
   const pendentesOuEmAndamento = agendamentos.filter(
     (ag) => ag.status !== "cancelado" && ag.status !== "concluído"
   );
-  const canceladosOuConcluidos = agendamentos.filter(
-    (ag) => ag.status === "cancelado" || ag.status === "concluído"
-  );
 
   return (
     <>
@@ -133,48 +130,7 @@ export default function ListarAgendamentosMonitor() {
           </div>
         </div>
 
-        {/* Agendamentos cancelados/concluídos */}
-        <div>
-          <h4>Cancelados / Concluídos</h4>
-          <div className="row">
-            {canceladosOuConcluidos.length === 0 && (
-              <p className="text-muted">
-                Nenhum agendamento cancelado ou concluído.
-              </p>
-            )}
-            {canceladosOuConcluidos.map((agendamento) => (
-              <div key={agendamento._id} className="col-md-6 mb-4">
-                <div className="card border-secondary shadow-sm">
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      Aluno: {agendamento.aluno?.nome || "Desconhecido"}
-                    </h5>
-                    <p>
-                      <strong>Monitor:</strong>{" "}
-                      {agendamento.monitor?.nome || "Desconhecido"}
-                    </p>
-                    <p>
-                      <strong>Data:</strong>{" "}
-                      {new Date(agendamento.data).toLocaleString("pt-BR")}
-                    </p>
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      <span
-                        className={`badge ${
-                          agendamento.status === "cancelado"
-                            ? "bg-secondary"
-                            : "bg-danger"
-                        }`}
-                      >
-                        {agendamento.status}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/*  */}
       </div>
     </>
   );
