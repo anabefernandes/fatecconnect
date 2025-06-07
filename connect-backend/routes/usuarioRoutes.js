@@ -175,7 +175,7 @@ router.post(
       }
 
       const novoMonitor = new User({
-        nome,
+        nome: `${nome} ✅`,
         email,
         senha: await bcrypt.hash(senha, 10),
         papel: "monitor",

@@ -32,7 +32,9 @@ const PainelMonitor = () => {
   const [novaBiografia, setNovaBiografia] = useState("");
 
   const [meusPosts, setMeusPosts] = useState([]);
+
   const [, setCurso] = useState("");
+
   const cursosMap = {
     "682f97402aa9313e00e689f9": "Desenvolvimento de Software Multiplataforma",
     "682f97402aa9313e00e689fc": "Análise e Desenvolvimento de Sistemas",
@@ -89,6 +91,10 @@ const PainelMonitor = () => {
       return;
     }
 
+    const loadData = async () => {
+      await Promise.all([fetchUserData(token), fetchMeusPosts(token)]);
+    };
+
     const fetchUserData = async () => {
       try {
         const { data } = await api.get("/perfil", {
@@ -113,7 +119,18 @@ const PainelMonitor = () => {
       }
     };
 
-    fetchUserData();
+    const fetchMeusPosts = async (token) => {
+      try {
+        const { data } = await api.get("/meus-posts", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMeusPosts(data);
+      } catch (error) {
+        console.error("Erro ao buscar posts do usuário:", error);
+      }
+    };
+
+    loadData();
   }, [navigate]);
 
   const handlePostar = async () => {
@@ -156,6 +173,7 @@ const PainelMonitor = () => {
       const { data } = await api.get("/meus-posts", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       setMeusPosts(data);
     } catch (error) {
       console.error("Erro ao postar:", error);
@@ -190,8 +208,6 @@ const PainelMonitor = () => {
         localStorage.setItem("user", JSON.stringify(updatedUser));
         setUsuario(updatedUser);
         setBiografia(data.usuario.biografia);
-
-        alert("Biografia atualizada com sucesso!");
         setShowBioModal(false);
       } else {
         alert(data.mensagem || "Erro ao atualizar biografia.");
@@ -220,7 +236,6 @@ const PainelMonitor = () => {
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
-      alert("Foto enviada com sucesso!");
 
       const updatedUser = { ...usuario, fotoPerfil: data.path };
       localStorage.setItem("user", JSON.stringify(updatedUser));

@@ -74,7 +74,6 @@ const PainelAluno = () => {
         setMeusPosts((prevPosts) =>
           prevPosts.filter((post) => post._id !== postId)
         );
-        alert("Post excluído com sucesso!");
       } catch (error) {
         console.error("Erro ao excluir post:", error);
         alert("Erro ao excluir o post.");
@@ -118,6 +117,7 @@ const PainelAluno = () => {
         const { data } = await api.get("/meus-posts", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         setMeusPosts(data);
       } catch (error) {
         console.error("Erro ao buscar posts do usuário:", error);
@@ -167,6 +167,7 @@ const PainelAluno = () => {
       const { data } = await api.get("/meus-posts", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       setMeusPosts(data);
     } catch (error) {
       console.error("Erro ao postar:", error);
@@ -202,7 +203,6 @@ const PainelAluno = () => {
         setUsuario(updatedUser);
         setBiografia(data.usuario.biografia);
 
-        alert("Biografia atualizada com sucesso!");
         setShowBioModal(false);
       } else {
         alert(data.mensagem || "Erro ao atualizar biografia.");
@@ -231,7 +231,6 @@ const PainelAluno = () => {
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
-      alert("Foto enviada com sucesso!");
 
       const updatedUser = { ...usuario, fotoPerfil: data.path };
       localStorage.setItem("user", JSON.stringify(updatedUser));

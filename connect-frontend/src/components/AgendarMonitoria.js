@@ -46,11 +46,10 @@ export default function AgendarMonitoria() {
         monitorId,
         data: new Date(data),
       });
-      alert(res.data.mensagem || "Agendamento realizado!");
     } catch (err) {
       alert(
         "Erro ao agendar: " +
-        (err.response?.data?.mensagem || "Erro desconhecido")
+          (err.response?.data?.mensagem || "Erro desconhecido")
       );
     }
   };
@@ -75,11 +74,8 @@ export default function AgendarMonitoria() {
       <SubNavbar />
 
       <div className="container-fluid fundo-agendamento">
-
         {mensagemErro && (
-          <div className="alert alert-danger text-center">
-            {mensagemErro}
-          </div>
+          <div className="alert alert-danger text-center">{mensagemErro}</div>
         )}
 
         <div className="row">
@@ -118,7 +114,7 @@ export default function AgendarMonitoria() {
               ))}
             </select>
           </div>
-          
+
           {/* COLUNA DIREITA - Calendário e Botão */}
           <div className="col-md-6 d-flex flex-column align-items-center justify-content-start coluna-direita">
             <label className="label-grande mb-3">
@@ -147,7 +143,6 @@ export default function AgendarMonitoria() {
               Agendar
             </button>
           </div>
-
         </div>
       </div>
     </>

@@ -48,7 +48,6 @@ const Cadastro = () => {
 
     try {
       await api.post("/cadastro", { nome, curso, ra, email, senha, papel: "aluno" });
-      alert("Cadastro realizado com sucesso!");
       navigate("/login");
     } catch (err) {
       alert("Erro ao cadastrar: " + err.response?.data?.mensagem || "Erro desconhecido");

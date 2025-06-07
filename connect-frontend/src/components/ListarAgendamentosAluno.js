@@ -106,7 +106,6 @@ export default function ListarAgendamentosAluno({ limite, comNavs = true, mostra
         </h2>
 
         {erro && <div className="alert alert-danger">{erro}</div>}
-        {mensagem && <div className="alert alert-success">{mensagem}</div>}
         
         <MiniAgendamentos
           agendamentos={agendamentosExibidos}

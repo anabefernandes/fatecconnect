@@ -59,7 +59,6 @@ function ListarVagas() {
 
         // Atualiza a lista de vagas após exclusão
         buscarVagas(cursoFiltro);
-        alert("Vaga excluída com sucesso!");
       } catch (error) {
         alert("Erro ao excluir vaga: " + error.message);
       }

@@ -40,7 +40,6 @@ const EditarUsuario = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      alert("Usuário atualizado com sucesso!");
       navigate("/usuarios");
     } catch (err) {
       alert("Erro ao atualizar usuário: " + err.response?.data?.mensagem || "Erro desconhecido.");
