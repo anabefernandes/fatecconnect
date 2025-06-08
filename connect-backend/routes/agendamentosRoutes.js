@@ -1,10 +1,25 @@
 const express = require("express");
 const Agendamento = require("../models/Agendamento");
+const HorarioDisponivel = require("../models/HorarioDisponivel");
 const verificarToken = require("../middlewares/verificarToken");
 const mongoose = require("mongoose");
 const router = express.Router();
 
-//agendar monitoria
+const diasSemanaMap = [
+  "domingo",
+  "segunda",
+  "terca",
+  "quarta",
+  "quinta",
+  "sexta",
+  "sabado",
+];
+
+function horaParaMinutos(horaStr) {
+  const [h, m] = horaStr.split(":").map(Number);
+  return h * 60 + m;
+}
+
 router.post("/agendar-monitoria", async (req, res) => {
   try {
     const { alunoId, monitorId, data } = req.body;
@@ -15,7 +30,6 @@ router.post("/agendar-monitoria", async (req, res) => {
         .json({ mensagem: "Dados incompletos para agendamento" });
     }
 
-    // Verifica se IDs são válidos
     if (
       !mongoose.Types.ObjectId.isValid(alunoId) ||
       !mongoose.Types.ObjectId.isValid(monitorId)
@@ -28,7 +42,37 @@ router.post("/agendar-monitoria", async (req, res) => {
       return res.status(400).json({ mensagem: "Data inválida" });
     }
 
-    // Verifica conflito
+    const diaSemana = diasSemanaMap[dataObj.getDay()]; 
+
+    const horaAgendada = dataObj.getHours() * 60 + dataObj.getMinutes();
+
+    const horariosDisponiveis = await HorarioDisponivel.find({
+      monitor: monitorId,
+      diaSemana,
+    });
+
+    if (horariosDisponiveis.length === 0) {
+      return res.status(400).json({
+        mensagem: `Monitor não possui horários disponíveis para ${diaSemana}.`,
+      });
+    }
+
+    const dentroDoHorario = horariosDisponiveis.some(
+      ({ horaInicio, horaFim }) => {
+        const inicioMin = horaParaMinutos(horaInicio);
+        const fimMin = horaParaMinutos(horaFim);
+        return horaAgendada >= inicioMin && horaAgendada < fimMin;
+      }
+    );
+
+    if (!dentroDoHorario) {
+      return res.status(400).json({
+        mensagem:
+          "Horário fora da disponibilidade do monitor. Verifique os horários disponíveis.",
+        horarios: horariosDisponiveis,
+      });
+    }
+
     const conflito = await Agendamento.findOne({
       monitor: monitorId,
       data: dataObj,

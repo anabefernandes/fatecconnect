@@ -20,6 +20,7 @@ export default function AgendarMonitoria() {
   const [data, setData] = useState(new Date());
   const [mensagemErro, setMensagemErro] = useState("");
   const [diaSelecionado, setDiaSelecionado] = useState("todos");
+  const [horariosMonitor, setHorariosMonitor] = useState([]);
 
   useEffect(() => {
     const buscarMonitores = async () => {
@@ -87,7 +88,22 @@ export default function AgendarMonitoria() {
             <select
               className="form-select mb-5"
               value={monitorId}
-              onChange={(e) => setMonitorId(e.target.value)}
+              onChange={async (e) => {
+                const id = e.target.value;
+                setMonitorId(id);
+                if (id) {
+                  try {
+                    const res = await api.get(`/monitores/${id}/horarios`);
+
+                    setHorariosMonitor(res.data.horarios || []);
+                  } catch (err) {
+                    console.error("Erro ao buscar horários do monitor", err);
+                    setHorariosMonitor([]);
+                  }
+                } else {
+                  setHorariosMonitor([]);
+                }
+              }}
             >
               <option value="">Selecione um monitor</option>
               {monitores.map((m) => (
@@ -115,6 +131,24 @@ export default function AgendarMonitoria() {
                 </option>
               ))}
             </select>
+            {horariosMonitor.length > 0 && (
+              <div className="mt-4 bg-light text-dark p-3 rounded">
+                <h6>Horários disponíveis do monitor:</h6>
+                <ul className="list-group">
+                  {horariosMonitor.map((h, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      <span className="text-capitalize">{h.diaSemana}</span>
+                      <span>
+                        {h.horaInicio} - {h.horaFim}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* COLUNA DIREITA - Calendário e Botão */}

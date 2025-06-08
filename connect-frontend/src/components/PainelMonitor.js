@@ -35,6 +35,53 @@ const PainelMonitor = () => {
 
   const [, setCurso] = useState("");
 
+  const [showHorarioModal, setShowHorarioModal] = useState(false);
+
+  const [horariosSemana, setHorariosSemana] = useState({
+    segunda: "",
+    terca: "",
+    quarta: "",
+    quinta: "",
+    sexta: "",
+    sabado: "",
+  });
+
+  const handleSalvarHorarios = async () => {
+    try {
+      const horariosArray = Object.entries(horariosSemana)
+        .filter(([dia, valor]) => valor.trim() !== "")
+        .map(([dia, valor]) => {
+          const [horaInicio, horaFim] = valor.split(" - ").map((h) => h.trim());
+          return {
+            diaSemana: dia.toLowerCase(),
+            horaInicio,
+            horaFim,
+          };
+        });
+
+      if (horariosArray.length === 0) {
+        alert("Informe ao menos um horário.");
+        return;
+      }
+
+      await api.post(
+        "/horarios-disponiveis",
+        { horarios: horariosArray },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      alert("Horários salvos com sucesso!");
+      setShowHorarioModal(false);
+    } catch (error) {
+      console.error("Erro ao salvar horários:", error);
+      alert("Erro ao salvar horários.");
+    }
+  };
+
   const cursosMap = {
     "682f97402aa9313e00e689f9": "Desenvolvimento de Software Multiplataforma",
     "682f97402aa9313e00e689fc": "Análise e Desenvolvimento de Sistemas",
@@ -348,6 +395,12 @@ const PainelMonitor = () => {
                 </p>
               </div>
               <MiniAgendamentosMonitor />
+              <button
+                className="btn btn-outline-primary w-100 mt-3"
+                onClick={() => setShowHorarioModal(true)}
+              >
+                Definir Horários da Semana
+              </button>
             </div>
           </div>
 
@@ -629,6 +682,68 @@ const PainelMonitor = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+      {/* Modal para definir horários */}
+      {showHorarioModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1040 }}
+        >
+          <div
+            className="modal-dialog"
+            style={{ zIndex: 1050, position: "relative" }}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Horários Disponíveis</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowHorarioModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                {Object.keys(horariosSemana).map((dia) => (
+                  <div className="mb-3" key={dia}>
+                    <label className="form-label text-capitalize">{dia}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Ex: 14:00 - 16:00"
+                      value={horariosSemana[dia]}
+                      onChange={(e) =>
+                        setHorariosSemana({
+                          ...horariosSemana,
+                          [dia]: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowHorarioModal(false)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSalvarHorarios}
+                >
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            className="modal-backdrop fade show"
+            style={{ zIndex: 1030 }}
+          ></div>
         </div>
       )}
     </>
