@@ -42,31 +42,46 @@ const Cadastro = () => {
       return alert("Apenas emails @fatec.sp.gov.br são permitidos");
     }
 
+    if (senha.length <= 6) {
+      return alert("A senha precisa ter mais de 6 caracteres");
+    }
+
     if (senha !== confirmarSenha) {
       return alert("As senhas não coincidem");
     }
 
     try {
-      await api.post("/cadastro", { nome, curso, ra, email, senha, papel: "aluno" });
+      await api.post("/cadastro", {
+        nome,
+        curso,
+        ra,
+        email,
+        senha,
+        papel: "aluno",
+      });
       navigate("/login");
     } catch (err) {
-      alert("Erro ao cadastrar: " + err.response?.data?.mensagem || "Erro desconhecido");
+      alert(
+        "Erro ao cadastrar: " + err.response?.data?.mensagem ||
+          "Erro desconhecido"
+      );
     }
   };
 
   return (
     <div className="container-fluid d-flex p-0" style={{ height: "100vh" }}>
       {/* COLUNA ESQUERDA */}
-      <div className="cadastro-left col-md-6 d-flex align-items-center justify-content-center"
+      <div
+        className="cadastro-left col-md-6 d-flex align-items-center justify-content-center"
         style={{
           backgroundImage: `url(/images/fundo-cadastro.png)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           height: "100vh",
-        }}>
+        }}
+      >
         <form onSubmit={handleCadastro} className="w-75">
-
           <h2 className="mb-3 text-center d-flex justify-content-between align-items-center">
             <Link to="/" className="btn btn-sm d-flex align-items-center">
               <img
@@ -75,16 +90,24 @@ const Cadastro = () => {
                 style={{ width: "30px", height: "30px" }}
               />
             </Link>
-            <span className="flex-grow-1 text-center" style={{ marginLeft: "-30px" }}>
+            <span
+              className="flex-grow-1 text-center"
+              style={{ marginLeft: "-30px" }}
+            >
               Cadastre-se
             </span>
           </h2>
           <p className="text-center mb-4 custom-font">
-            Já possui uma conta?&nbsp;&nbsp;&nbsp; <Link to="/login" className="text-decoration">Fazer login</Link>
+            Já possui uma conta?&nbsp;&nbsp;&nbsp;{" "}
+            <Link to="/login" className="text-decoration">
+              Fazer login
+            </Link>
           </p>
 
           <div className="mb-3">
-            <label htmlFor="nome" className="form-label">Nome</label>
+            <label htmlFor="nome" className="form-label">
+              Nome
+            </label>
             <input
               type="text"
               name="nome"
@@ -96,7 +119,9 @@ const Cadastro = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="curso" className="form-label">Curso</label>
+            <label htmlFor="curso" className="form-label">
+              Curso
+            </label>
             <select
               name="curso"
               className="form-control form-control-cadastro rounded-3"
@@ -106,7 +131,7 @@ const Cadastro = () => {
             >
               <option value="">Selecione um curso</option>
               {cursos
-                .filter(curso => curso.nome !== "Admin")
+                .filter((curso) => curso.nome !== "Admin")
                 .map((curso) => (
                   <option key={curso._id} value={curso.nome}>
                     {curso.nome}
@@ -116,7 +141,9 @@ const Cadastro = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="ra" className="form-label">RA</label>
+            <label htmlFor="ra" className="form-label">
+              RA
+            </label>
             <input
               type="text"
               name="ra"
@@ -130,17 +157,25 @@ const Cadastro = () => {
       </div>
 
       {/* COLUNA DIREITA */}
-      <div className="cadastro-left col-md-6 d-flex align-items-center justify-content-center"
+      <div
+        className="cadastro-left col-md-6 d-flex align-items-center justify-content-center"
         style={{
           backgroundImage: `url(/images/fundo-cadastro1.png)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           height: "100vh",
-        }}>
-        <form onSubmit={handleCadastro} className="w-75" style={{ marginTop: "162px" }}>
+        }}
+      >
+        <form
+          onSubmit={handleCadastro}
+          className="w-75"
+          style={{ marginTop: "162px" }}
+        >
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email Institucional</label>
+            <label htmlFor="email" className="form-label">
+              Email Institucional
+            </label>
             <input
               type="email"
               name="email"
@@ -152,7 +187,9 @@ const Cadastro = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="senha" className="form-label">Senha</label>
+            <label htmlFor="senha" className="form-label">
+              Senha
+            </label>
             <input
               type="password"
               name="senha"
@@ -164,7 +201,9 @@ const Cadastro = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="confirmarSenha" className="form-label">Confirme sua senha</label>
+            <label htmlFor="confirmarSenha" className="form-label">
+              Confirme sua senha
+            </label>
             <input
               type="password"
               name="confirmarSenha"
@@ -182,6 +221,6 @@ const Cadastro = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Cadastro;
