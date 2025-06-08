@@ -10,7 +10,8 @@
 }
 
 .custom-datepicker-wrapper .react-datepicker {
-  transform: scale(1.1);
+  transform: scale(1.5);
+  margin-bottom: 100px;
   transform-origin: top;
 }
 
@@ -41,7 +42,6 @@
 }
 
 .botao-agendar {
-  margin-top: 8rem;
   width: auto;
   max-width: 300px;
 }
@@ -88,4 +88,21 @@
 .react-datepicker__time-list-item--selected:hover {
   background-color: var(--red-light) !important;
   color: #fff !important;
+}
+
+@media (max-width: 1060px) {
+  .custom-datepicker-wrapper .react-datepicker {
+    transform: scale(1.1);
+    transform-origin: top;
+  }
+
+  .custom-datepicker-wrapper {
+    margin-bottom: -80px;
+  }
+
+  .botao-agendar {
+  width: auto;
+  max-width: 300px;
+  margin-bottom: 50px;
+}
 }
