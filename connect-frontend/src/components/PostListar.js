@@ -154,7 +154,7 @@ export default function Forum() {
           },
         }
       );
-      buscarPosts(); // atualiza likes
+      buscarPosts(); // atualiza likes 
     } catch (err) {
       console.error("Erro ao curtir post:", err);
     }
