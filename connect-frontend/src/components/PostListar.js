@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "./Navbar";
 import SubNavbar from "./SubNavbar";
@@ -25,7 +24,6 @@ export default function Forum() {
   const [respostasVisiveis, setRespostasVisiveis] = useState({});
   const [searchParams] = useSearchParams();
 
-  const navigate = useNavigate();
   const usuarioId = JSON.parse(localStorage.getItem("user"))?._id;
 
   useEffect(() => {
@@ -234,22 +232,6 @@ export default function Forum() {
                           ? monitor.curso.nome
                           : monitor.curso || "Curso não informado"}
                       </p>
-                    </div>
-                    <div className="icon-actions">
-                      <img
-                        src="/images/chat-monitor.png"
-                        alt="Chat"
-                        title="Conversar"
-                        onClick={() => navigate(`/chat/${monitor._id}`)}
-                      />
-                      <img
-                        src="/images/agenda-monitor.png"
-                        alt="Agendar"
-                        title="Agendar"
-                        onClick={() =>
-                          navigate(`/agendar-monitoria/${monitor._id}`)
-                        }
-                      />
                     </div>
                   </div>
                 </SwiperSlide>

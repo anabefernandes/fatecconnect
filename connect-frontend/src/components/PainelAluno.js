@@ -179,12 +179,12 @@ const PainelAluno = () => {
 
   const handleSalvarBiografia = async () => {
     if (!novaBiografia.trim()) {
-      alert("A biografia não pode estar vazia.");
+      alert("As anotações não pode estar vazia.");
       return;
     }
 
     if (novaBiografia.length > 500) {
-      alert("A biografia não pode ter mais que 500 caracteres.");
+      alert("As anotações não pode ter mais que 500 caracteres.");
       return;
     }
 
@@ -205,10 +205,10 @@ const PainelAluno = () => {
 
         setShowBioModal(false);
       } else {
-        alert(data.mensagem || "Erro ao atualizar biografia.");
+        alert(data.mensagem || "Erro ao atualizar anotações.");
       }
     } catch (error) {
-      console.error("Erro ao atualizar biografia:", error);
+      console.error("Erro ao atualizar anotações:", error);
       alert("Erro na requisição.");
     }
   };
@@ -320,7 +320,7 @@ const PainelAluno = () => {
                 }}
               >
                 <div className="mb-3" style={{ position: "relative" }}>
-                  <h5 className="text-center mb-0">Biografia</h5>
+                  <h5 className="text-center mb-0">Minhas Anotações</h5>
                   <img
                     src="/images/editar.png"
                     alt="Editar"
@@ -336,11 +336,11 @@ const PainelAluno = () => {
                       top: "0px",
                       right: "0px",
                     }}
-                    title="Editar biografia"
+                    title="Editar Anotações"
                   />
                 </div>
                 <p style={{ whiteSpace: "pre-wrap", fontSize: "1.05rem" }}>
-                  {biografia || "Nenhuma biografia cadastrada."}
+                  {biografia || "Nenhuma anotação foi registrada."}
                 </p>
               </div>
               <ListarAgendamentosAluno
@@ -576,7 +576,7 @@ const PainelAluno = () => {
         </div>
       )}
 
-      {/* MODAL DE BIOGRAFIA */}
+      {/* MODAL DE ANOTAÇÕES */}
       {showBioModal && (
         <div
           className="modal fade show d-block"
@@ -585,7 +585,7 @@ const PainelAluno = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Editar Biografia</h5>
+                <h5 className="modal-title">Editar Anotações</h5>
                 <button
                   type="button"
                   className="btn-close"
