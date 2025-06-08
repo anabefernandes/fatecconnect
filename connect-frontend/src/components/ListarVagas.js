@@ -33,8 +33,8 @@ function ListarVagas() {
       return;
     }
 
-    if (user._id !== criadorId) {
-      alert("Você só pode excluir vagas que você criou");
+    if (user._id !== criadorId && user.papel !== "monitor") {
+      alert("Você só pode excluir vagas que você criou ou se for monitor");
       return;
     }
 
@@ -59,7 +59,6 @@ function ListarVagas() {
 
         // Atualiza a lista de vagas após exclusão
         buscarVagas(cursoFiltro);
-        alert("Vaga excluída com sucesso!");
       } catch (error) {
         alert("Erro ao excluir vaga: " + error.message);
       }
@@ -95,13 +94,16 @@ function ListarVagas() {
     formData.append("curso", form.curso);
 
     try {
-      const response = await fetch("https://fatecconnect-backend.onrender.com/api/cadastrovagas", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        "https://fatecconnect-backend.onrender.com/api/cadastrovagas",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
@@ -274,7 +276,8 @@ function ListarVagas() {
           {vagas.map((vaga) => (
             <div key={vaga._id} className="col-md-6 col-lg-4 mb-4">
               <div className="card h-100 shadow-sm position-relative">
-                {user?._id === vaga.criador?._id && (
+                {(user?._id === vaga.criador?._id ||
+                  user?.papel === "monitor") && (
                   <button
                     onClick={() =>
                       handleExcluirVaga(vaga._id, vaga.criador._id)

@@ -52,9 +52,8 @@ const CriarMonitor = () => {
     }
 
     try {
-      await api.post("/criar-monitor", { nome, curso, ra, email, senha, papel: "monitor" });
-      alert("Monitor criado com sucesso!");
-      navigate("/painel-admin"); // ou a tela que fizer sentido
+      await api.post("/criar-monitor", { nome, curso, ra, email, senha, papel: "monitor" });      
+      navigate("/painel-admin"); 
     } catch (err) {
       alert("Erro ao cadastrar: " + err.response?.data?.mensagem || "Erro desconhecido");
     }

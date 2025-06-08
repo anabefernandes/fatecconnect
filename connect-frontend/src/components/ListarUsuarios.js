@@ -36,7 +36,6 @@ const ListarUsuarios = () => {
       await api.delete(`/usuarios/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Usuário excluído com sucesso!");
       carregarUsuarios();
     } catch (err) {
       alert("Erro ao excluir usuário: " + err.response?.data?.mensagem);

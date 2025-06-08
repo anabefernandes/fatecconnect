@@ -166,7 +166,7 @@ router.delete("/posts/:postId", verificarToken, async (req, res) => {
       return res.status(404).json({ message: "Post não encontrado" });
     }
 
-    if (post.autor.toString() !== req.user.id) {
+    if (post.autor.toString() !== req.user.id && req.user.papel !== "monitor") {
       return res
         .status(403)
         .json({ message: "Usuário não autorizado para excluir este post" });

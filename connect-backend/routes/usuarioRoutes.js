@@ -175,7 +175,7 @@ router.post(
       }
 
       const novoMonitor = new User({
-        nome,
+        nome: `${nome} ✅`,
         email,
         senha: await bcrypt.hash(senha, 10),
         papel: "monitor",
@@ -426,7 +426,9 @@ router.get("/cursos", async (req, res) => {
 //retorna dados do perfil para o usuario
 router.get("/perfil", verificarToken, async (req, res) => {
   try {
-    const usuario = await User.findById(req.user.id).select("-senha");
+    const usuario = await User.findById(req.user.id)
+      .select("nome fotoPerfil curso _id papel biografia")
+      .populate("curso", "nome");
     if (!usuario) {
       return res
         .status(404)

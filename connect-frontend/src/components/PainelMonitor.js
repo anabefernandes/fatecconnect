@@ -33,6 +33,64 @@ const PainelMonitor = () => {
 
   const [meusPosts, setMeusPosts] = useState([]);
 
+  const [, setCurso] = useState("");
+
+  const [showHorarioModal, setShowHorarioModal] = useState(false);
+
+  const [horariosSemana, setHorariosSemana] = useState({
+    segunda: "",
+    terca: "",
+    quarta: "",
+    quinta: "",
+    sexta: "",
+    sabado: "",
+  });
+
+  const handleSalvarHorarios = async () => {
+    try {
+      const horariosArray = Object.entries(horariosSemana)
+        .filter(([dia, valor]) => valor.trim() !== "")
+        .map(([dia, valor]) => {
+          const [horaInicio, horaFim] = valor.split(" - ").map((h) => h.trim());
+          return {
+            diaSemana: dia.toLowerCase(),
+            horaInicio,
+            horaFim,
+          };
+        });
+
+      if (horariosArray.length === 0) {
+        alert("Informe ao menos um horário.");
+        return;
+      }
+
+      await api.post(
+        "/horarios-disponiveis",
+        { horarios: horariosArray },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      alert("Horários salvos com sucesso!");
+      setShowHorarioModal(false);
+    } catch (error) {
+      console.error("Erro ao salvar horários:", error);
+      alert("Erro ao salvar horários.");
+    }
+  };
+
+  const cursosMap = {
+    "682f97402aa9313e00e689f9": "Desenvolvimento de Software Multiplataforma",
+    "682f97402aa9313e00e689fc": "Análise e Desenvolvimento de Sistemas",
+    "682f97402aa9313e00e689ff": "Comércio Exterior",
+    "682f97402aa9313e00e68a02": "Gestão Empresarial",
+    "682f97402aa9313e00e68a05": "Processos Quimicos",
+    "682f97402aa9313e00e68a08": "Usuario Admin",
+  };
+
   const mostrarMensagemTemporaria = (msg, duracao = 3000) => {
     setMensagemPost(msg);
     setTimeout(() => {
@@ -47,7 +105,10 @@ const PainelMonitor = () => {
       setPostEditandoId(postId);
       setEditando(true);
 
-      postInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      postInputRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   };
 
@@ -58,7 +119,9 @@ const PainelMonitor = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 
-        setMeusPosts((prevPosts) => prevPosts.filter((post) => post._id !== postId));
+        setMeusPosts((prevPosts) =>
+          prevPosts.filter((post) => post._id !== postId)
+        );
         alert("Post excluído com sucesso!");
       } catch (error) {
         console.error("Erro ao excluir post:", error);
@@ -75,6 +138,10 @@ const PainelMonitor = () => {
       return;
     }
 
+    const loadData = async () => {
+      await Promise.all([fetchUserData(token), fetchMeusPosts(token)]);
+    };
+
     const fetchUserData = async () => {
       try {
         const { data } = await api.get("/perfil", {
@@ -84,6 +151,7 @@ const PainelMonitor = () => {
         if (data.usuario) {
           setUsuario(data.usuario);
           setBiografia(data.usuario.biografia || "");
+          setCurso(data.usuario.curso);
           if (data.usuario.fotoPerfil) {
             setFotoUrl(
               `https://fatecconnect-backend.onrender.com${data.usuario.fotoPerfil}`
@@ -98,9 +166,19 @@ const PainelMonitor = () => {
       }
     };
 
-    fetchUserData();
-  }, [navigate]);
+    const fetchMeusPosts = async (token) => {
+      try {
+        const { data } = await api.get("/meus-posts", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMeusPosts(data);
+      } catch (error) {
+        console.error("Erro ao buscar posts do usuário:", error);
+      }
+    };
 
+    loadData();
+  }, [navigate]);
 
   const handlePostar = async () => {
     if (!tituloPost.trim()) {
@@ -112,10 +190,13 @@ const PainelMonitor = () => {
 
     try {
       if (editando) {
-        await api.put(`/posts/${postEditandoId}`,
+        await api.put(
+          `/posts/${postEditandoId}`,
           { titulo: tituloPost },
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
         mostrarMensagemTemporaria("Post editado com sucesso!");
@@ -124,7 +205,9 @@ const PainelMonitor = () => {
           "/postar",
           { titulo: tituloPost },
           {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
         mostrarMensagemTemporaria("Post criado com sucesso!");
@@ -137,6 +220,7 @@ const PainelMonitor = () => {
       const { data } = await api.get("/meus-posts", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       setMeusPosts(data);
     } catch (error) {
       console.error("Erro ao postar:", error);
@@ -171,8 +255,6 @@ const PainelMonitor = () => {
         localStorage.setItem("user", JSON.stringify(updatedUser));
         setUsuario(updatedUser);
         setBiografia(data.usuario.biografia);
-
-        alert("Biografia atualizada com sucesso!");
         setShowBioModal(false);
       } else {
         alert(data.mensagem || "Erro ao atualizar biografia.");
@@ -201,7 +283,6 @@ const PainelMonitor = () => {
       });
 
       const newFotoUrl = `https://fatecconnect-backend.onrender.com${data.path}`;
-      alert("Foto enviada com sucesso!");
 
       const updatedUser = { ...usuario, fotoPerfil: data.path };
       localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -264,16 +345,31 @@ const PainelMonitor = () => {
                     }}
                   />
                 </div>
-                <h5 className="mb-0 fw-bold mt-3">{usuario?.nome || "Monitor"}</h5>
+                <div>
+                  <h5 className="mb-0 fw-bold mt-3">
+                    {usuario?.nome || "Aluno"}
+                  </h5>
+                  <p className="text-muted mb-2" style={{ fontSize: "1rem" }}>
+                    {usuario?.curso
+                      ? typeof usuario.curso === "object"
+                        ? usuario.curso.nome ||
+                          cursosMap[usuario.curso._id] ||
+                          "Curso desconhecido"
+                        : cursosMap[usuario.curso] || "Curso desconhecido"
+                      : "Curso não informado"}
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-4 mb-4 p-3 rounded"
+              <div
+                className="mt-4 mb-4 p-3 rounded"
                 style={{
                   backgroundColor: "#f0f0f0",
                   maxHeight: "350px",
                   height: "300px",
                   position: "relative",
-                }}>
+                }}
+              >
                 <div className="mb-3" style={{ position: "relative" }}>
                   <h5 className="text-center mb-0">Biografia</h5>
                   <img
@@ -294,10 +390,17 @@ const PainelMonitor = () => {
                     title="Editar biografia"
                   />
                 </div>
-                <p style={{ whiteSpace: 'pre-wrap', fontSize: "1.05rem" }}>
-                  {biografia || "Nenhuma biografia cadastrada."}</p>
+                <p style={{ whiteSpace: "pre-wrap", fontSize: "1.05rem" }}>
+                  {biografia || "Nenhuma biografia cadastrada."}
+                </p>
               </div>
               <MiniAgendamentosMonitor />
+              <button
+                className="btn btn-outline-primary w-100 mt-3"
+                onClick={() => setShowHorarioModal(true)}
+              >
+                Definir Horários da Semana
+              </button>
             </div>
           </div>
 
@@ -371,10 +474,14 @@ const PainelMonitor = () => {
                     height: 36,
                     cursor: loadingPost ? "not-allowed" : "pointer",
                     opacity: loadingPost ? 0.5 : 1,
-                    transition: "transform 0.2s ease-in-out"
+                    transition: "transform 0.2s ease-in-out",
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.2)"}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1.0)"}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.2)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.0)")
+                  }
                 />
               </div>
               {mensagemPost && (
@@ -382,16 +489,18 @@ const PainelMonitor = () => {
               )}
             </div>
 
-
             {meusPosts.map((post) => (
               <div
                 key={post._id}
                 className="card mb-3 shadow-sm position-relative"
                 style={{ borderLeft: "4px solid var(--red-dead)" }}
               >
-                <div className="position-absolute"
+                <div
+                  className="position-absolute"
                   style={{
-                    top: "10px", right: "10px", zIndex: 1
+                    top: "10px",
+                    right: "10px",
+                    zIndex: 1,
                   }}
                 >
                   <button
@@ -433,7 +542,10 @@ const PainelMonitor = () => {
                     </strong>
                   </div>
 
-                  <p className="card-text text-dark" style={{ whiteSpace: "pre-wrap" }}>
+                  <p
+                    className="card-text text-dark"
+                    style={{ whiteSpace: "pre-wrap" }}
+                  >
                     {post.titulo.length > 150
                       ? post.titulo.substring(0, 150) + "..."
                       : post.titulo}
@@ -457,114 +569,183 @@ const PainelMonitor = () => {
             ))}
           </div>
         </div>
-      </div >
+      </div>
 
       {/* MODAL DE UPLOAD DE FOTO */}
-      {
-        showModal && (
-          <div
-            className="modal fade show d-block"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Enviar Foto de Perfil</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setShowModal(false)}
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
+      {showModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Enviar Foto de Perfil</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {preview && (
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="img-fluid mt-3 rounded"
                   />
-                  {preview && (
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="img-fluid mt-3 rounded"
-                    />
-                  )}
-                </div>
-                <div className="modal-footer">
-                  <button
-                    className="btn"
-                    style={{
-                      backgroundColor: "var(--red-light)",
-                      color: "#fff"
-                    }}
-                    onClick={() => setShowModal(false)}
-                  > Cancelar
-                  </button>
-                  <button className="btn"
-                    style={{
-                      backgroundColor: "var(--red-dark)",
-                      color: "#fff"
-                    }} onClick={handleUpload}>
-                    Enviar
-                  </button>
-                </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "var(--red-light)",
+                    color: "#fff",
+                  }}
+                  onClick={() => setShowModal(false)}
+                >
+                  {" "}
+                  Cancelar
+                </button>
+                <button
+                  className="btn"
+                  style={{
+                    backgroundColor: "var(--red-dark)",
+                    color: "#fff",
+                  }}
+                  onClick={handleUpload}
+                >
+                  Enviar
+                </button>
               </div>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
 
       {/* MODAL DE BIOGRAFIA */}
-      {
-        showBioModal && (
-          <div
-            className="modal fade show d-block"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Editar Biografia</h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => setShowBioModal(false)}
-                  ></button>
-                </div>
+      {showBioModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Editar Biografia</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowBioModal(false)}
+                ></button>
+              </div>
 
-                <div className="modal-body">
-                  <textarea
-                    className="form-control"
-                    style={{
-                      height: '100px',
-                      resize: 'none'
-                    }}
-                    value={novaBiografia}
-                    onChange={(e) => setNovaBiografia(e.target.value)}
-                    maxLength={500}
-                  />
-                  <small className="text-muted">{novaBiografia.length}/ 500 caracteres</small>
-                </div>
+              <div className="modal-body">
+                <textarea
+                  className="form-control"
+                  style={{
+                    height: "100px",
+                    resize: "none",
+                  }}
+                  value={novaBiografia}
+                  onChange={(e) => setNovaBiografia(e.target.value)}
+                  maxLength={500}
+                />
+                <small className="text-muted">
+                  {novaBiografia.length}/ 500 caracteres
+                </small>
+              </div>
 
-                <div className="modal-footer">
-                  <button
-                    className="btn"
-                    style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
-                    onClick={() => setShowBioModal(false)}
-                  > Cancelar
-                  </button>
-                  <button
-                    className="btn"
-                    style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
-                    onClick={handleSalvarBiografia}
-                  > Salvar
-                  </button>
-                </div>
+              <div className="modal-footer">
+                <button
+                  className="btn"
+                  style={{ backgroundColor: "var(--red-light)", color: "#fff" }}
+                  onClick={() => setShowBioModal(false)}
+                >
+                  {" "}
+                  Cancelar
+                </button>
+                <button
+                  className="btn"
+                  style={{ backgroundColor: "var(--red-dark)", color: "#fff" }}
+                  onClick={handleSalvarBiografia}
+                >
+                  {" "}
+                  Salvar
+                </button>
               </div>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
+      {/* Modal para definir horários */}
+      {showHorarioModal && (
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1040 }}
+        >
+          <div
+            className="modal-dialog"
+            style={{ zIndex: 1050, position: "relative" }}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Horários Disponíveis</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowHorarioModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                {Object.keys(horariosSemana).map((dia) => (
+                  <div className="mb-3" key={dia}>
+                    <label className="form-label text-capitalize">{dia}</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Ex: 14:00 - 16:00"
+                      value={horariosSemana[dia]}
+                      onChange={(e) =>
+                        setHorariosSemana({
+                          ...horariosSemana,
+                          [dia]: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowHorarioModal(false)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleSalvarHorarios}
+                >
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            className="modal-backdrop fade show"
+            style={{ zIndex: 1030 }}
+          ></div>
+        </div>
+      )}
     </>
   );
 };

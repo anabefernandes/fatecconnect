@@ -20,6 +20,7 @@ export default function AgendarMonitoria() {
   const [data, setData] = useState(new Date());
   const [mensagemErro, setMensagemErro] = useState("");
   const [diaSelecionado, setDiaSelecionado] = useState("todos");
+  const [horariosMonitor, setHorariosMonitor] = useState([]);
 
   useEffect(() => {
     const buscarMonitores = async () => {
@@ -41,16 +42,17 @@ export default function AgendarMonitoria() {
     }
 
     try {
-      const res = await api.post("/agendar-monitoria", {
+      await api.post("/agendar-monitoria", {
         alunoId,
         monitorId,
         data: new Date(data),
       });
-      alert(res.data.mensagem || "Agendamento realizado!");
+      alert("Agendamento realizado com sucesso!");
+      window.location.reload();
     } catch (err) {
       alert(
         "Erro ao agendar: " +
-        (err.response?.data?.mensagem || "Erro desconhecido")
+          (err.response?.data?.mensagem || "Erro desconhecido")
       );
     }
   };
@@ -75,11 +77,8 @@ export default function AgendarMonitoria() {
       <SubNavbar />
 
       <div className="container-fluid fundo-agendamento">
-
         {mensagemErro && (
-          <div className="alert alert-danger text-center">
-            {mensagemErro}
-          </div>
+          <div className="alert alert-danger text-center">{mensagemErro}</div>
         )}
 
         <div className="row">
@@ -89,7 +88,22 @@ export default function AgendarMonitoria() {
             <select
               className="form-select mb-5"
               value={monitorId}
-              onChange={(e) => setMonitorId(e.target.value)}
+              onChange={async (e) => {
+                const id = e.target.value;
+                setMonitorId(id);
+                if (id) {
+                  try {
+                    const res = await api.get(`/monitores/${id}/horarios`);
+
+                    setHorariosMonitor(res.data.horarios || []);
+                  } catch (err) {
+                    console.error("Erro ao buscar horários do monitor", err);
+                    setHorariosMonitor([]);
+                  }
+                } else {
+                  setHorariosMonitor([]);
+                }
+              }}
             >
               <option value="">Selecione um monitor</option>
               {monitores.map((m) => (
@@ -117,8 +131,26 @@ export default function AgendarMonitoria() {
                 </option>
               ))}
             </select>
+            {horariosMonitor.length > 0 && (
+              <div className="mt-4 bg-light text-dark p-3 rounded">
+                <h6>Horários disponíveis do monitor:</h6>
+                <ul className="list-group">
+                  {horariosMonitor.map((h, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      <span className="text-capitalize">{h.diaSemana}</span>
+                      <span>
+                        {h.horaInicio} - {h.horaFim}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-          
+
           {/* COLUNA DIREITA - Calendário e Botão */}
           <div className="col-md-6 d-flex flex-column align-items-center justify-content-start coluna-direita">
             <label className="label-grande mb-3">
@@ -147,7 +179,6 @@ export default function AgendarMonitoria() {
               Agendar
             </button>
           </div>
-
         </div>
       </div>
     </>
