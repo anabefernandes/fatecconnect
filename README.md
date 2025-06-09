@@ -13,13 +13,17 @@ O projeto **FatecConnect** tem como objetivo modernizar o sistema de monitoria d
 ## 🧾 Índice
 
 - [🛠️ Tecnologias Utilizadas](#🛠️-tecnologias-utilizadas)
-- [⚙️ Como Executar o Projeto](#⚙️-como-executar-o-projeto)
   - [Front-End](#front-end)
   - [Back-End](#back-end)
+- [🚀 Funcionalidades](#🚀-funcionalidades)
+- [⚙️ Como Executar o Projeto](#⚙️-como-executar-o-projeto)
 - [📦 Funcionalidades](#📦-funcionalidades)
+- [📄 Documentação](#📄-documentação)
 - [🌐 Deploy](#🌐-deploy)
 - [👩‍🏫 Agradecimentos](#👩‍🏫-agradecimentos)
 - [👩‍💻 Integrantes](#👩‍💻-integrantes)
+
+
 ## 🛠️ Tecnologias Utilizadas
 
 ### **Front-End**
