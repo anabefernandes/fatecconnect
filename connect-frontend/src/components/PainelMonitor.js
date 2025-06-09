@@ -738,8 +738,12 @@ const PainelMonitor = () => {
                   Cancelar
                 </button>
                 <button
+                  style={{
+                    backgroundColor: "var(--red-dark)",
+                    color: "#fff",
+                  }}
                   type="button"
-                  className="btn btn-primary"
+                  className="btn"
                   onClick={handleSalvarHorarios}
                 >
                   Salvar
