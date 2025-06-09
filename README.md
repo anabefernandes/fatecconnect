@@ -1,31 +1,176 @@
-## Para fazer commit:
 
-### Só no GitHub:
+[![logo.png](https://i.postimg.cc/hvB73mLh/logo.png)](https://postimg.cc/R6gFWNbz)
 
-Push:
-`git push github main`
+# 📚 FatecConnect
 
-Pull:
-`git pull github main`
+O projeto **FatecConnect** tem como objetivo modernizar o sistema de monitoria da FATEC, oferecendo uma plataforma online que permite:
 
-### Só no GitLab:
+- Agendamento de monitorias individuais.
+- Chat em tempo real entre alunos e monitores.
+- Fórum de dúvidas por curso e disciplina.
+- Divulgação de oportunidades de estágio e cursos gratuitos.
 
-Push:
-`git push gitlab main`
+## 🧾 Índice
 
-Pull:
-`git pull gitlab main`
+- [🛠️ Tecnologias Utilizadas](#🛠️-tecnologias-utilizadas)
+- [⚙️ Como Executar o Projeto](#⚙️-como-executar-o-projeto)
+  - [Front-End](#front-end)
+  - [Back-End](#back-end)
+- [📦 Funcionalidades](#📦-funcionalidades)
+- [🌐 Deploy](#🌐-deploy)
+- [👩‍🏫 Agradecimentos](#👩‍🏫-agradecimentos)
+- [👩‍💻 Integrantes](#👩‍💻-integrantes)
+## 🛠️ Tecnologias Utilizadas
 
-## Front-End:
+### **Front-End**
+- **React 18.2** – Biblioteca JavaScript para criação de interfaces reativas  
+- **React Router DOM 7.5** – Gerenciamento de rotas no front-end  
+- **Bootstrap 5.3** – Estilização com grid e componentes responsivos  
+- **Material UI 7.0** – Componentes visuais modernos e acessíveis  
+- **MUI Icons** – Ícones vetoriais integrados ao Material UI  
+- **React Icons 5.5** – Coleção de ícones populares para React  
+- **Axios 1.9** – Requisições HTTP assíncronas  
+- **Socket.IO Client 4.8** – Comunicação em tempo real com o back-end  
+- **Emoji Mart** – Picker de emojis personalizável  
+- **React Datepicker** – Componente de seleção de datas  
+- **Date-fns 4.1** – Manipulação de datas com funções utilitárias  
+- **JWT Decode** – Decodificação de tokens JWT no front-end  
+- **Swiper 11.2** – Slides/carrosséis modernos responsivos
 
-#### Intalações de dependencias e bibliotecas:
-`npm install react@18.2.0 react-dom@18.2.0 react-router-dom@7.5.2 react-scripts@5.0.1 axios@1.9.0 bootstrap@5.3.5 @emotion/react@11.14.0 @emotion/styled@11.14.0 @mui/icons-material@7.0.2 @mui/material@7.0.2 @testing-library/dom@10.4.0 @testing-library/jest-dom@6.6.3 @testing-library/react@13.4.0 @testing-library/user-event@14.4.3 cors@2.8.5 express@5.1.0 react-icons@5.5.0 socket.io-client@4.8.1 socket.io@4.8.1 web-vitals@2.1.4 @emoji-mart/react @emoji-mart/data`
+### **Back-End**
+- **Node.js** – Ambiente de execução JavaScript no servidor  
+- **Express 4.21** – Framework web minimalista para Node.js  
+- **MongoDB + Mongoose 8.13** – Banco de dados NoSQL com modelagem de dados  
+- **JWT 9.0** – Autenticação com tokens JSON Web Token  
+- **BcryptJS 3.0** – Criptografia de senhas com hash  
+- **Multer** – Upload de arquivos (como imagens de perfil)  
+- **Nodemailer 6.10** – Envio de e-mails (ex: redefinição de senha)  
+- **Socket.IO 4.8** – Comunicação em tempo real (ex: chat)  
+- **UUID 11.1** – Geração de identificadores únicos  
+- **Dotenv 16.5** – Carregamento de variáveis de ambiente  
+- **Morgan** – Logs de requisições HTTP para debug  
+- **Cors** – Permissão de requisições entre domínios  
+- **Nodemon 3.1** (dev) – Reinicialização automática em ambiente de desenvolvimento
+## 🚀 Funcionalidades
 
-## Back-End:
+### 🔐 **Login e Autenticação**
+- Login seguro com verificação de email e senha utilizando **bcrypt**.
+- Geração de **JWT (JSON Web Token)** para autenticação e autorização.
+- Diferentes tipos de usuários: **Aluno**, **Monitor** e **Admin**.
+- Redefinição de senha via email com **Nodemailer**.
 
-#### Intalações de dependencias e bibliotecas:
-`npm install express@4.21.2 jsonwebtoken@9.0.2 bcryptjs@3.0.2 dotenv@16.5.0 mongoose@8.13.3 cors@2.8.5 mongodb@6.16.0 nodemailer@6.10.1 socket.io@4.8.1 socket.io-client@4.8.1 morgan
-`
-#### Nodemon:
-`npm install --save-dev nodemon@3.1.10
-`
+### 👨‍🏫 **Gestão de Usuários**
+- Cadastro e edição de perfis para alunos, monitores e administradores.
+- Upload de imagem de perfil com **Multer**.
+
+### 📅 **Agendamentos de Monitoria**
+- Alunos podem agendar monitorias com monitores disponíveis.
+- Monitores visualizam seus agendamentos por data e horário.
+- Monitor define seus horários disponíveis.
+
+### 💬 **Chat em Tempo Real**
+- Integração com **Socket.IO** para comunicação em tempo real entre alunos e monitores.
+- Notificações e mensagens instantâneas.
+
+### 📚 **Fórum de Dúvidas**
+- Alunos podem postar dúvidas e comentar.
+- Organização por curso.
+
+### 🛡️ **Sistema de Permissões**
+- Acesso restrito a funcionalidades conforme o tipo de usuário.
+- Verificação de token e middleware de autenticação no back-end.
+
+## Rodando localmente
+## ⚙️ Como Executar o Projeto
+
+### 📁 Pré-requisitos
+
+Certifique-se de ter instalado:
+
+- **Node.js** (versão 18)
+- **MongoDB** (local ou Atlas)
+- **Git** (opcional)
+
+---
+
+### 🗄️ Banco de Dados (MongoDB Atlas)
+
+1. Este projeto utiliza **MongoDB Atlas** como banco de dados na nuvem.
+
+2. Certifique-se de criar um cluster no [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) e obter a sua string de conexão que deve ser colocada no seu .env.
+
+
+### 🖥️ Front-End (React)
+
+1. Acesse a pasta do front-end:
+   ```bash
+   cd connect-frontend
+    ```
+2. Instale as dependencias:
+    ```bash
+    npm install
+    ```
+3. Atualize o arquivo api.js (/src/services/api.js):
+    ```bash
+    http://localhost:5000/api
+    ```
+3. Rodar em modo de desenvolvimento:
+    ```bash
+    npm start
+    ```
+4. O frontend estará disponível na porta http://localhost:3000
+
+
+### 🔧 Back-End (Node.js + Express)
+
+1. Acesse a pasta do front-end:
+   ```bash
+   cd connect-backend
+
+2. Instale todas as dependências:
+    ```bash
+    npm install
+
+3. Crie um arquivo `.env` na raiz da pasta `backend` com as seguintes variáveis:
+
+    ```bash
+    PORT=5000
+    MONGO_URI=string_de_conexao_mongodb
+    JWT_SECRET=sua_chave_jwt
+    EMAIL_USER=seu_email@gmail.com
+    EMAIL_PASS=sua_senha
+
+4. Inicie o servidor de desenvolvimento:
+    ```bash
+    npm start
+
+4. O app React estará disponível em:
+http://localhost:5000
+
+## 🌐 Deploy
+A aplicação foi publicada em ambiente web.
+
+### 🔗 [FatecConnect](https://fatecconnect-frontend.onrender.com)
+
+## 📄 Documentação
+
+A documentação completa do projeto está disponível no repositório na pasta /documentacao, estruturada conforme as normas da ABNT, contendo os capítulos 1 a 7.
+
+
+## 👩‍🏫 Agradecimentos
+
+Agradecemos à professora **Eulaliane Gonçalves** pelo apoio e orientação durante o desenvolvimento deste projeto, e à Fatec Praia Grande e ao Centro Paula Souza pela oportunidade de aprendizado e desenvolvimento técnico e profissional.
+
+## 👩‍💻 Integrantes
+
+- [@anabefernandes](https://github.com/anabefernandes) | Ana Beatriz Fernandes Caldeira da Silva  
+  *Responsável pelo back-end*
+
+- [@DudaFontes14](https://github.com/DudaFontes14) | Maria Eduarda Fontes dos Santos  
+  *Responsável pelo back-end*
+
+- [@JuRibeiro14](https://github.com/JuRibeiro14) | Julia Lopes Ribeiro  
+  *Responsável pelo front-end* 
+
+- [@Brusamt](https://github.com/Brusamt) | Bruna Martins Santana  
+  *Responsável pela documentação*
