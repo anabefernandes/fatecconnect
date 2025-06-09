@@ -10,20 +10,6 @@ O projeto **FatecConnect** tem como objetivo modernizar o sistema de monitoria d
 - Fórum de dúvidas por curso e disciplina.
 - Divulgação de oportunidades de estágio e cursos gratuitos.
 
-## 🧾 Índice
-
-- [🛠️ Tecnologias Utilizadas](#🛠️-tecnologias-utilizadas)
-  - [Front-End](#front-end)
-  - [Back-End](#back-end)
-- [🚀 Funcionalidades](#🚀-funcionalidades)
-- [⚙️ Como Executar o Projeto](#⚙️-como-executar-o-projeto)
-- [📦 Funcionalidades](#📦-funcionalidades)
-- [📄 Documentação](#📄-documentação)
-- [🌐 Deploy](#🌐-deploy)
-- [👩‍🏫 Agradecimentos](#👩‍🏫-agradecimentos)
-- [👩‍💻 Integrantes](#👩‍💻-integrantes)
-
-
 ## 🛠️ Tecnologias Utilizadas
 
 ### **Front-End**
@@ -55,6 +41,7 @@ O projeto **FatecConnect** tem como objetivo modernizar o sistema de monitoria d
 - **Morgan** – Logs de requisições HTTP para debug  
 - **Cors** – Permissão de requisições entre domínios  
 - **Nodemon 3.1** (dev) – Reinicialização automática em ambiente de desenvolvimento
+
 ## 🚀 Funcionalidades
 
 ### 🔐 **Login e Autenticação**
@@ -159,7 +146,6 @@ A aplicação foi publicada em ambiente web.
 ## 📄 Documentação
 
 A documentação completa do projeto está disponível no repositório na pasta /documentacao, estruturada conforme as normas da ABNT, contendo os capítulos 1 a 7.
-
 
 ## 👩‍🏫 Agradecimentos
 
